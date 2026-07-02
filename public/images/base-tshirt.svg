@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <rect width="200" height="200" rx="12" fill="#f1f5f9"/>
+  <path d="M60 50 L100 35 L140 50 L145 65 L125 70 L125 160 L75 160 L75 70 L55 65 L60 50Z" fill="#6366f1" opacity="0.8"/>
+  <text x="100" y="185" text-anchor="middle" font-size="10" fill="#64748b">T-Shirt Base</text>
+</svg>
