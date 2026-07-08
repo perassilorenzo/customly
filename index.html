@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Custom Configurator - Personalizza il tuo abbigliamento in tempo reale"
+    />
+    <title>Custom Configurator</title>
+    <link rel="stylesheet" href="styles/main.css" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module">
+      import { route, init } from "./utils/router.js";
+      import { renderNav, initNav } from "./components/navbar.js";
+      import { renderFooter } from "./components/footer.js";
+      import { renderHome, initHome } from "./pages/home.js";
+      import {
+        renderConfiguratore,
+        initConfiguratore,
+      } from "./pages/configuratore.js";
+      import { renderVenditori, initVenditori } from "./pages/venditori.js";
+      import { renderContatti, initContatti } from "./pages/contatti.js";
+
+      function wrap(html, initFn) {
+        return () => {
+          window._pageInit = initFn;
+          return renderNav() + html + renderFooter();
+        };
+      }
+
+      route("/", wrap(renderHome(), initHome));
+      route("/configuratore", wrap(renderConfiguratore(), initConfiguratore));
+      route("/venditore", wrap(renderConfiguratore(), initConfiguratore));
+      route("/venditori", wrap(renderVenditori(), initVenditori));
+      route("/contatti", wrap(renderContatti(), initContatti));
+
+      init(document.getElementById("app"));
+      initNav();
+    </script>
+  </body>
+</html>
