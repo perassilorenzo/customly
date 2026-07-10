@@ -1,9 +1,11 @@
-import { seller as demon } from "../sellers/demon-handmade/data.js";
-import { seller as raw } from "../sellers/raw-spirit/data.js";
+import { seller as v1 } from "../sellers/venditore1/data.js";
+import { seller as v2 } from "../sellers/venditore2/data.js";
+import { seller as adm } from "../sellers/admin/data.js";
 
 const registry = {
-  "demon-handmade": demon,
-  "raw-spirit": raw,
+  venditore1: v1,
+  venditore2: v2,
+  admin: adm,
 };
 
 export function getSeller(id) {

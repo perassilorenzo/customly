@@ -26,10 +26,11 @@ const DEFAULTS = {
   color: "#c13535",
 };
 
-export function buildConfig(productId, selections, color) {
+export function buildConfig(productId, selections, color, options) {
   const cfg = { ...DEFAULTS, color };
+  if (!options) return cfg;
   for (const [group, val] of Object.entries(selections)) {
-    const grp = productOptions(productId, group);
+    const grp = options[group];
     if (!grp) continue;
     if (grp.type === "single") {
       const v = grp.values.find((x) => x.id === val);
@@ -44,12 +45,8 @@ export function buildConfig(productId, selections, color) {
   return cfg;
 }
 
-function productOptions(productId, group) {
-  return null;
-}
-
-export function renderSVG(productId, selections, color) {
-  const cfg = buildConfig(productId, selections, color);
+export function renderSVG(productId, selections, color, options, cfg) {
+  if (!cfg) cfg = buildConfig(productId, selections, color, options);
   if (productId === "pantaloni" || productId === "jeans")
     return renderPants(cfg);
   if (productId === "felpa") return renderHoodie(cfg);

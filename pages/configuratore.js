@@ -1,8 +1,5 @@
 import { renderSVG, getColorLabel } from "../data/products.js";
-import { garmentTypes, getGarmentType } from "../data/garment-types.js";
-import { getSeller, searchSellers, getAllSellers } from "../data/sellers.js";
 import { send } from "../utils/formspree.js";
-import { navigate, getParams } from "../utils/router.js";
 
 const COLORS = [
   { id: "#c13535", label: "Rosso" },
@@ -14,582 +11,1085 @@ const COLORS = [
   { id: "#d4a017", label: "Oro" },
 ];
 
-const state = {
-  mode: "own",
-  seller: null,
-  product: null,
-  garmentType: "maglia",
-  selections: {},
-  color: "#c13535",
+const GARMENT = {
+  tshirt: {
+    label: "T-Shirt",
+    icon: "👕",
+    models: [
+      { id: "short-sleeve", label: "Short Sleeve" },
+      { id: "long-sleeve", label: "Long Sleeve" },
+      { id: "tank-top", label: "Tank Top" },
+    ],
+  },
+  jeans: {
+    label: "Jeans",
+    icon: "👖",
+    models: [
+      { id: "skinny", label: "Skinny" },
+      { id: "regular", label: "Regular" },
+      { id: "baggy", label: "Baggy" },
+    ],
+  },
 };
+
+const CUSTOMIZATIONS = {
+  jeans: [
+    {
+      id: "flared",
+      label: "Bottom Triangle Panels (Flared)",
+      desc: "Add triangular fabric panels to the bottom of the jeans to create a flared effect.",
+      price: 15,
+      settings: [
+        {
+          key: "fabricAvailable",
+          label: "Fabric available?",
+          type: "boolean",
+          default: true,
+        },
+        {
+          key: "fabric",
+          label: "Choose fabric",
+          type: "select",
+          default: "denim",
+          dependsOn: { key: "fabricAvailable", value: false },
+          options: [
+            { id: "denim", label: "Denim", price: 8 },
+            { id: "tuta", label: "Sweatpants fabric", price: 10 },
+            { id: "camo", label: "Camouflage", price: 12 },
+          ],
+        },
+        {
+          key: "size",
+          label: "Choose size",
+          type: "select",
+          default: "medium",
+          options: [
+            { id: "small", label: "Small" },
+            { id: "medium", label: "Medium" },
+            { id: "large", label: "Large" },
+          ],
+        },
+      ],
+    },
+    {
+      id: "side-panels",
+      label: "Side Triangle Panels",
+      desc: "Allows widening the jeans from the ankle up to the pocket seam.",
+      price: 18,
+      settings: [
+        {
+          key: "fabricAvailable",
+          label: "Fabric available?",
+          type: "boolean",
+          default: true,
+        },
+        {
+          key: "fabric",
+          label: "Choose fabric",
+          type: "select",
+          default: "denim",
+          dependsOn: { key: "fabricAvailable", value: false },
+          options: [
+            { id: "denim", label: "Denim", price: 8 },
+            { id: "tuta", label: "Sweatpants fabric", price: 10 },
+            { id: "camo", label: "Camouflage", price: 12 },
+          ],
+        },
+        {
+          key: "size",
+          label: "Choose size",
+          type: "select",
+          default: "medium",
+          options: [
+            { id: "small", label: "Small" },
+            { id: "medium", label: "Medium" },
+            { id: "large", label: "Large" },
+          ],
+        },
+      ],
+    },
+    {
+      id: "bottom-hem",
+      label: "Bottom Hem",
+      desc: "Choose the finish for the bottom of the jeans.",
+      price: 5,
+      settings: [
+        {
+          key: "finish",
+          label: "Choose finish",
+          type: "select",
+          default: "standard",
+          options: [
+            { id: "standard", label: "Standard hem", price: 0 },
+            { id: "raw-cut", label: "Raw cut", price: 3 },
+            {
+              id: "frayed",
+              label: "Frayed hem with visible white threads",
+              price: 5,
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  tshirt: [
+    {
+      id: "crop",
+      label: "Crop",
+      desc: "Crop the shirt to your desired length.",
+      price: 8,
+      settings: [
+        {
+          key: "length",
+          label: "Choose crop length",
+          type: "select",
+          default: "medium",
+          options: [
+            { id: "small", label: "Small" },
+            { id: "medium", label: "Medium" },
+            { id: "large", label: "Large" },
+          ],
+        },
+      ],
+    },
+    {
+      id: "shorten",
+      label: "Shorten Shirt",
+      desc: "Shorten the overall length of the shirt.",
+      price: 8,
+      settings: [
+        {
+          key: "length",
+          label: "Choose new length",
+          type: "select",
+          default: "medium",
+          options: [
+            { id: "small", label: "Small" },
+            { id: "medium", label: "Medium" },
+            { id: "large", label: "Large" },
+          ],
+        },
+      ],
+    },
+    {
+      id: "shorten-sleeves",
+      label: "Shorten Sleeves",
+      desc: "Shorten the sleeves while keeping the original sewn hem.",
+      price: 6,
+      settings: [
+        {
+          key: "amount",
+          label: "Choose amount",
+          type: "select",
+          default: "medium",
+          options: [
+            { id: "small", label: "Small" },
+            { id: "medium", label: "Medium" },
+            { id: "large", label: "Large" },
+          ],
+        },
+      ],
+    },
+    {
+      id: "remove-sleeves",
+      label: "Remove Sleeves",
+      desc: "Cuts the sleeves completely to create a tank top.",
+      price: 5,
+      settings: [],
+    },
+  ],
+};
+
+function initState() {
+  return {
+    step: "start",
+    hasGarment: null,
+    garmentType: null,
+    model: null,
+    brand: "",
+    customizations: [],
+    color: "#c13535",
+    idCounter: 0,
+    form: {
+      name: "",
+      surname: "",
+      email: "",
+      instagram: "",
+      phone: "",
+      notes: "",
+      acceptTerms: false,
+    },
+    submitting: false,
+    submitted: false,
+    submittedOk: false,
+  };
+}
+
+let s;
 
 export function renderConfiguratore() {
   return `
 <div class="page">
   <div class="container">
-    <div class="section-header">
-      <span class="label">Configuratore</span>
-      <h2>Progetta il tuo capo</h2>
-      <p>Hai un capo da modificare o vuoi crearne uno da zero? Scegli e inizia a personalizzare.</p>
-    </div>
-
-    <div id="seller-search-section">
-      <div class="seller-search-bar">
-        <input type="text" id="seller-search-input" placeholder="Cerca un venditore..." autocomplete="off">
-        <button class="btn btn-primary" id="seller-search-btn">Cerca</button>
-      </div>
-      <div id="seller-search-results" class="seller-search-results"></div>
-    </div>
-
-    <div id="config-content">
-      <div class="mode-selector">
-        <button class="opt-btn active" data-mode="own">Ho gi\u00e0 un capo</button>
-        <button class="opt-btn" data-mode="seller">Non ho un capo (acquista da un venditore)</button>
-      </div>
-
-      <div class="config-layout">
-        <div id="config-controls"></div>
-        <div>
-          <div class="config-preview" id="preview"><p style="color:var(--text-secondary);font-size:14px">Seleziona le opzioni per vedere l&rsquo;anteprima</p></div>
-          <div class="riepilogo" id="riepilogo"></div>
-        </div>
-      </div>
-    </div>
+    <div id="configuratore-root"></div>
   </div>
 </div>`;
 }
 
-function getSelections() {
-  const opts = getActiveOptions();
-  if (!opts) return {};
-  const sel = {};
-  for (const [g, grp] of Object.entries(opts)) {
-    if (grp.type === "single") sel[g] = state.selections[g] || grp.default;
-    else if (grp.type === "multi") sel[g] = state.selections[g] || [];
-  }
-  return sel;
-}
+function render() {
+  const root = document.getElementById("configuratore-root");
+  if (!root) return;
 
-function getActiveOptions() {
-  if (state.mode === "own") {
-    const g = getGarmentType(state.garmentType);
-    return g ? g.modifications : null;
-  }
-  if (state.mode === "seller" && state.product) {
-    return state.product.options || null;
-  }
-  return null;
-}
-
-function getBasePrice() {
-  if (state.mode === "own") return 0;
-  if (state.mode === "seller" && state.product)
-    return state.product.basePrice || 0;
-  return 0;
-}
-
-function getPrice() {
-  let total = getBasePrice();
-  const opts = getActiveOptions();
-  if (!opts) return total;
-  const sel = getSelections();
-  for (const [g, val] of Object.entries(sel)) {
-    const grp = opts[g];
-    if (!grp) continue;
-    if (grp.type === "single") {
-      const v = grp.values.find((x) => x.id === val);
-      if (v) total += v.price;
-    } else if (grp.type === "multi" && Array.isArray(val)) {
-      for (const vid of val) {
-        const v = grp.values.find((x) => x.id === vid);
-        if (v) total += v.price;
-      }
-    }
-  }
-  return total;
-}
-
-function getProductType() {
-  if (state.mode === "own") return state.garmentType;
-  if (state.mode === "seller" && state.product) {
-    if (state.product.type === "jeans") return "jeans";
-    if (state.product.type === "felpa") return "felpa";
-    return "maglia";
-  }
-  return "maglia";
-}
-
-function renderControls() {
-  const el = document.getElementById("config-controls");
-  if (!el) return;
-  const sel = getSelections();
-  const opts = getActiveOptions();
-  let html = "";
-
-  if (state.mode === "own") {
-    html += `<div class="config-section"><h3>Che capo hai?</h3><div class="opt-grid">`;
-    for (const [id, gt] of Object.entries(garmentTypes)) {
-      html += `<button class="opt-btn${state.garmentType === id ? " active" : ""}" data-gt="${id}">${gt.name}</button>`;
-    }
-    html += `</div></div>`;
-
-    const gt = getGarmentType(state.garmentType);
-    if (gt && gt.desc) {
-      html += `<p style="font-size:13px;color:var(--text-secondary);margin-bottom:20px;line-height:1.6">${gt.desc}</p>`;
-    }
-  }
-
-  if (state.mode === "seller" && state.seller) {
-    if (state.product) {
-      html += `<div class="seller-badge"><span class="seller-badge-name">${state.seller.name}</span> <span style="font-size:12px;color:var(--text-secondary)">— ${state.seller.tagline}</span> <button class="seller-badge-change" data-clear-seller>Cambia</button></div>`;
-    } else {
-      html += `<div class="seller-profile">
-        <h3 class="seller-profile-name">${state.seller.name}</h3>
-        <p class="seller-profile-tagline">${state.seller.tagline}</p>
-        <div class="seller-profile-section">
-          <h4>Chi &egrave;</h4>
-          <p>${state.seller.bio}</p>
+  root.innerHTML = `
+    <div class="cfg-layout">
+      <div class="cfg-main">
+        <div class="cfg-search">
+          <div class="cfg-search-bar">
+            <svg class="cfg-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" id="cfg-search-input" placeholder="Search products or start customizing..." autocomplete="off">
+          </div>
+          <div id="cfg-search-results" class="cfg-search-results"></div>
         </div>
-        <div class="seller-profile-section">
-          <h4>Stile</h4>
-          <p>${state.seller.style}</p>
+        ${renderCurrentStep()}
+      </div>
+      <div class="cfg-sidebar" id="cfg-sidebar">${renderSummary()}</div>
+    </div>
+  `;
+
+  bindSearch();
+  bindStepEvents();
+  updateSidebar();
+}
+
+function renderCurrentStep() {
+  if (s.submittedOk) return renderDone();
+  if (s.step === "start") return renderStepStart();
+  if (s.step === "garment") return renderStepGarment();
+  if (s.step === "customize") return renderStepCustomize();
+  if (s.step === "review") return renderStepReview();
+  return "";
+}
+
+function renderDone() {
+  return `
+    <div class="cfg-done">
+      <div class="cfg-done-icon">✓</div>
+      <h2>Richiesta inviata!</h2>
+      <p>La tua configurazione è stata ricevuta. Il venditore ti contatterà con un preventivo.</p>
+      <button class="cfg-btn cfg-btn-primary" onclick="location.reload()">Nuova configurazione</button>
+    </div>
+  `;
+}
+
+function renderStepStart() {
+  return `
+    <div class="cfg-step">
+      <div class="cfg-step-header">
+        <span class="cfg-step-num">Step 1</span>
+        <h2>Do you already have a garment?</h2>
+      </div>
+      <div class="cfg-choice-grid">
+        <button class="cfg-choice-card${s.hasGarment === true ? " active" : ""}" data-has-garment="true">
+          <span class="cfg-choice-icon">✓</span>
+          <span class="cfg-choice-label">Yes</span>
+          <span class="cfg-choice-desc">I have a garment to customize</span>
+        </button>
+        <button class="cfg-choice-card${s.hasGarment === false ? " active" : ""}" data-has-garment="false">
+          <span class="cfg-choice-icon">✕</span>
+          <span class="cfg-choice-label">No</span>
+          <span class="cfg-choice-desc">I want to buy from a vendor</span>
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function renderStepGarment() {
+  const types = Object.entries(GARMENT);
+  return `
+    <div class="cfg-step">
+      <div class="cfg-step-header">
+        <span class="cfg-step-num">Step 2</span>
+        <h2>Select your garment</h2>
+      </div>
+      <div class="cfg-type-grid">
+        ${types
+          .map(
+            ([id, g]) => `
+          <button class="cfg-type-card${s.garmentType === id ? " active" : ""}" data-garment-type="${id}">
+            <span class="cfg-type-icon">${g.icon}</span>
+            <span class="cfg-type-label">${g.label}</span>
+          </button>
+        `,
+          )
+          .join("")}
+      </div>
+      ${
+        s.garmentType
+          ? `
+        <div class="cfg-section">
+          <h3 class="cfg-section-title">Choose the model</h3>
+          <div class="cfg-opt-group">
+            ${GARMENT[s.garmentType].models
+              .map(
+                (m) => `
+              <button class="cfg-opt${s.model === m.id ? " active" : ""}" data-model="${m.id}">${m.label}</button>
+            `,
+              )
+              .join("")}
+          </div>
         </div>
-        <div class="seller-profile-section">
-          <h4>Contatti</h4>
-          <p>${state.seller.contacts.instagram ? '<a href="' + state.seller.contacts.instagram + '" target="_blank" style="color:var(--accent)">Instagram</a>' : ""}${state.seller.contacts.instagram && state.seller.contacts.email ? " · " : ""}${state.seller.contacts.email ? '<a href="mailto:' + state.seller.contacts.email + '" style="color:var(--accent)">' + state.seller.contacts.email + "</a>" : ""}</p>
+        <div class="cfg-section">
+          <h3 class="cfg-section-title">Brand <span class="cfg-optional">(optional)</span></h3>
+          <input class="cfg-input" id="cfg-brand" type="text" placeholder="e.g. Nike, Zara, Vintage, Blank..." value="${escHtml(s.brand)}">
         </div>
-        <button class="btn btn-secondary" data-clear-seller style="margin-top:12px;font-size:12px;padding:8px 20px">Cambia venditore</button>
-      </div>`;
-    }
-    if (state.product) {
-      html += `<p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;line-height:1.6">${state.product.desc}</p>`;
-    }
-  }
-
-  if (state.mode === "seller" && state.seller && state.product === null) {
-    html += `<div class="config-section"><h3>Scegli un prodotto</h3><div class="opt-grid">`;
-    for (const p of state.seller.products) {
-      html += `<button class="opt-btn" data-prod="${p.id}">${p.name} &mdash; da &euro;${p.basePrice}</button>`;
-    }
-    html += `</div></div>`;
-
-    el.innerHTML = html;
-    bindProductSelection();
-    bindOwnGarmentType();
-    bindClearSeller();
-    return;
-  }
-
-  if (state.mode === "seller" && !state.seller) {
-    html += `<p style="font-size:14px;color:var(--text-secondary);line-height:1.8">Cerca un venditore sopra per vedere i suoi prodotti e iniziare a configurare.</p>`;
-    el.innerHTML = html;
-    return;
-  }
-
-  if (!opts) {
-    if (state.mode === "seller" && state.seller && state.product) {
-      html += `<p style="font-size:14px;color:var(--text-secondary)">Nessuna opzione disponibile per questo prodotto.</p>`;
-    } else {
-      html += `<p style="font-size:14px;color:var(--text-secondary)">Seleziona un capo per iniziare.</p>`;
-    }
-    el.innerHTML = html;
-    return;
-  }
-
-  html += `<div class="config-section"><h3>Colore</h3><div class="opt-grid">`;
-  for (const c of COLORS) {
-    const active = state.color === c.id;
-    html += `<button class="opt-btn${active ? " active" : ""}" data-color="${c.id}"><span class="color-dot" style="background:${c.id}"></span>${c.label}</button>`;
-  }
-  html += `</div></div>`;
-
-  for (const [key, grp] of Object.entries(opts)) {
-    html += `<div class="config-section"><h3>${grp.label}</h3><div class="opt-grid" data-group="${key}">`;
-    for (const v of grp.values) {
-      const selected =
-        grp.type === "single"
-          ? sel[key] === v.id || (!sel[key] && grp.default === v.id)
-          : (sel[key] || []).includes(v.id);
-      const cls = selected ? " active" : "";
-      html += `<button class="opt-btn${cls}" data-opt="${v.id}" data-type="${grp.type}">${v.label}${v.price > 0 ? ` <span class="opt-price">+&euro;${v.price}</span>` : ""}</button>`;
-    }
-    html += `</div></div>`;
-  }
-
-  el.innerHTML = html;
-  bindEvents();
-  renderPreview();
-  renderRiepilogo();
-}
-
-function bindEvents() {
-  document.querySelectorAll("[data-gt]").forEach((b) => {
-    b.addEventListener("click", () => {
-      state.garmentType = b.dataset.gt;
-      state.selections = {};
-      renderControls();
-    });
-  });
-
-  document.querySelectorAll("[data-prod]").forEach((b) => {
-    b.addEventListener("click", () => {
-      if (!state.seller) return;
-      const p = state.seller.products.find((x) => x.id === b.dataset.prod);
-      if (p) {
-        state.product = p;
-        state.selections = {};
-        renderControls();
+        <button class="cfg-btn cfg-btn-primary cfg-btn-next" id="cfg-to-customize">Continue to Customizations →</button>
+      `
+          : ""
       }
-    });
-  });
+    </div>
+  `;
+}
 
-  document.querySelectorAll("[data-color]").forEach((b) => {
-    b.addEventListener("click", () => {
-      state.color = b.dataset.color;
-      document
-        .querySelectorAll("[data-color]")
-        .forEach((x) => x.classList.remove("active"));
-      b.classList.add("active");
-      renderPreview();
-      renderRiepilogo();
-    });
-  });
+function renderStepCustomize() {
+  const defs = CUSTOMIZATIONS[s.garmentType] || [];
+  const available = defs.filter(
+    (d) => !s.customizations.find((c) => c.id === d.id),
+  );
 
-  document.querySelectorAll("[data-opt][data-type='single']").forEach((b) => {
-    b.addEventListener("click", () => {
-      const g = b.closest("[data-group]").dataset.group;
-      state.selections[g] = b.dataset.opt;
-      b.closest("[data-group]")
-        .querySelectorAll("[data-opt]")
-        .forEach((x) => x.classList.remove("active"));
-      b.classList.add("active");
-      renderPreview();
-      renderRiepilogo();
-    });
-  });
-
-  document.querySelectorAll("[data-opt][data-type='multi']").forEach((b) => {
-    b.addEventListener("click", () => {
-      const g = b.closest("[data-group]").dataset.group;
-      if (!state.selections[g]) state.selections[g] = [];
-      const arr = state.selections[g];
-      const id = b.dataset.opt;
-      if (arr.includes(id)) {
-        state.selections[g] = arr.filter((x) => x !== id);
-        b.classList.remove("active");
-      } else {
-        arr.push(id);
-        b.classList.add("active");
+  return `
+    <div class="cfg-step">
+      <div class="cfg-step-header">
+        <span class="cfg-step-num">Step 3</span>
+        <h2>Customize your ${GARMENT[s.garmentType].label}</h2>
+      </div>
+      <div class="cfg-section">
+        <h3 class="cfg-section-title">Color</h3>
+        <div class="cfg-color-grid">
+          ${COLORS.map(
+            (c) => `
+            <button class="cfg-color-swatch${s.color === c.id ? " active" : ""}" data-color="${c.id}" style="--swatch:${c.id}" title="${c.label}">
+              <span class="cfg-color-dot"></span>
+            </button>
+          `,
+          ).join("")}
+        </div>
+      </div>
+      ${s.customizations.map((c, i) => renderCustomizationItem(c, i)).join("")}
+      ${
+        available.length > 0
+          ? `
+        <div class="cfg-add-section">
+          <button class="cfg-btn cfg-btn-secondary" id="cfg-show-add">+ Add customization</button>
+          <div class="cfg-add-dropdown" id="cfg-add-dropdown" style="display:none">
+            ${available
+              .map(
+                (d) => `
+              <button class="cfg-add-opt" data-add-cust="${d.id}">${d.label} <span class="cfg-price">+€${d.price}</span></button>
+            `,
+              )
+              .join("")}
+          </div>
+        </div>
+      `
+          : ""
       }
-      renderPreview();
-      renderRiepilogo();
-    });
-  });
-
-  document.querySelectorAll("[data-clear-seller]").forEach((b) => {
-    b.addEventListener("click", () => {
-      state.seller = null;
-      state.product = null;
-      state.selections = {};
-      renderControls();
-      renderPreview();
-      renderRiepilogo();
-    });
-  });
+      <div class="cfg-step-actions">
+        <button class="cfg-btn cfg-btn-ghost" id="cfg-back-garment">← Back</button>
+        <button class="cfg-btn cfg-btn-primary cfg-btn-next" id="cfg-to-review">Review Order →</button>
+      </div>
+    </div>
+  `;
 }
 
-function bindProductSelection() {
-  document.querySelectorAll("[data-prod]").forEach((b) => {
-    b.addEventListener("click", () => {
-      if (!state.seller) return;
-      const p = state.seller.products.find((x) => x.id === b.dataset.prod);
-      if (p) {
-        state.product = p;
-        state.selections = {};
-        renderControls();
+function renderCustomizationItem(c, i) {
+  const def = findCustDef(s.garmentType, c.id);
+  if (!def) return "";
+  const open = c._open;
+
+  const settingRows = def.settings
+    .map((setting) => {
+      const val =
+        c.settings[setting.key] !== undefined
+          ? c.settings[setting.key]
+          : setting.default;
+      if (!isSettingVisible(setting, c)) return "";
+
+      if (setting.type === "boolean") {
+        return `
+        <div class="cfg-setting">
+          <label class="cfg-toggle">
+            <input type="checkbox" data-cust-setting="${i}" data-setting-key="${setting.key}" ${val ? "checked" : ""}>
+            <span class="cfg-toggle-track"></span>
+            <span class="cfg-toggle-label">${setting.label}</span>
+          </label>
+        </div>
+      `;
       }
-    });
-  });
-}
-
-function bindOwnGarmentType() {
-  document.querySelectorAll("[data-gt]").forEach((b) => {
-    b.addEventListener("click", () => {
-      state.garmentType = b.dataset.gt;
-      state.selections = {};
-      renderControls();
-    });
-  });
-}
-
-function bindClearSeller() {
-  document.querySelectorAll("[data-clear-seller]").forEach((b) => {
-    b.addEventListener("click", () => {
-      state.seller = null;
-      state.product = null;
-      state.selections = {};
-      renderControls();
-      renderPreview();
-      renderRiepilogo();
-    });
-  });
-}
-
-function renderPreview() {
-  const el = document.getElementById("preview");
-  if (!el) return;
-  const type = getProductType();
-  const sel = getSelections();
-  const svg = renderSVG(type, sel, state.color);
-  el.innerHTML =
-    svg ||
-    '<p style="color:var(--text-secondary);font-size:14px">Anteprima non disponibile</p>';
-}
-
-function renderRiepilogo() {
-  const el = document.getElementById("riepilogo");
-  if (!el) return;
-  const sel = getSelections();
-  const total = getPrice();
-  const opts = getActiveOptions();
-  const basePrice = getBasePrice();
-
-  let html = `<h3>Riepilogo ordine</h3>`;
-
-  if (state.mode === "own") {
-    const gt = getGarmentType(state.garmentType);
-    html += `<div class="riep-row"><span class="l">Capo</span><span class="v">${gt ? gt.name : "—"}</span></div>`;
-  }
-
-  if (state.mode === "seller") {
-    if (state.seller)
-      html += `<div class="riep-row"><span class="l">Venditore</span><span class="v">${state.seller.name}</span></div>`;
-    if (state.product)
-      html += `<div class="riep-row"><span class="l">Prodotto</span><span class="v">${state.product.name}</span></div>`;
-  }
-
-  html += `<div class="riep-row"><span class="l">Colore</span><span class="v">${getColorLabel(state.color)}</span></div>`;
-
-  if (opts) {
-    for (const [g, val] of Object.entries(sel)) {
-      const grp = opts[g];
-      if (!grp) continue;
-      let vals = "";
-      if (grp.type === "single") {
-        const v = grp.values.find((x) => x.id === val);
-        if (v) vals = v.label;
-      } else if (Array.isArray(val)) {
-        vals =
-          val
-            .map((vid) => grp.values.find((x) => x.id === vid))
-            .filter(Boolean)
-            .map((x) => x.label)
-            .join(", ") || "—";
+      if (setting.type === "select") {
+        const optHtml = setting.options
+          .map(
+            (o) => `
+        <button class="cfg-opt${val === o.id ? " active" : ""}" data-cust-opt="${i}" data-setting-key="${setting.key}" data-opt-id="${o.id}">${o.label}${o.price ? ` <span class="cfg-price">+€${o.price}</span>` : ""}</button>
+      `,
+          )
+          .join("");
+        return `
+        <div class="cfg-setting">
+          <span class="cfg-setting-label">${setting.label}</span>
+          <div class="cfg-opt-group">${optHtml}</div>
+        </div>
+      `;
       }
-      if (vals)
-        html += `<div class="riep-row"><span class="l">${grp.label}</span><span class="v">${vals}</span></div>`;
-    }
-  }
+      return "";
+    })
+    .join("");
 
-  if (basePrice > 0) {
-    html += `<div class="riep-row"><span class="l">Base</span><span class="v">&euro;${basePrice.toFixed(2)}</span></div>`;
-  }
-
-  html += `<div class="riep-totale"><span>Totale</span><span class="amt">&euro;${total.toFixed(2)}</span></div>`;
-
-  html += `<div class="riep-form" id="order-form">
-    <div id="form-err"></div>
-    <input type="text" id="f-name" placeholder="Nome *">
-    <input type="email" id="f-email" placeholder="Email *">
-    <input type="text" id="f-contact" placeholder="Instagram / Telefono (opzionale)">
-    <textarea id="f-note" placeholder="Note aggiuntive (opzionale)" rows="2"></textarea>
-    <button class="btn btn-primary" id="btn-order" style="width:100%;justify-content:center">Invia richiesta</button>
-  </div>`;
-
-  el.innerHTML = html;
-  document.getElementById("btn-order")?.addEventListener("click", submitOrder);
+  return `
+    <div class="cfg-cust-item">
+      <div class="cfg-cust-header" data-toggle-cust="${i}">
+        <div class="cfg-cust-info">
+          <span class="cfg-cust-name">${def.label}</span>
+          <span class="cfg-cust-price">+€${custPrice(c)}</span>
+        </div>
+        <div class="cfg-cust-actions">
+          <button class="cfg-cust-toggle" data-toggle-cust="${i}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="${open ? "M18 15l-6-6-6 6" : "M6 9l6 6 6-6"}"/></svg>
+          </button>
+          <button class="cfg-cust-remove" data-remove-cust="${i}">✕</button>
+        </div>
+      </div>
+      <div class="cfg-cust-settings" style="display:${open ? "block" : "none"}">
+        ${settingRows}
+      </div>
+    </div>
+  `;
 }
 
-function getModificaDetails() {
-  const opts = getActiveOptions();
-  const sel = getSelections();
-  if (!opts) return "";
-  const lines = [];
-  for (const [g, val] of Object.entries(sel)) {
-    const grp = opts[g];
-    if (!grp) continue;
-    if (grp.type === "single") {
-      const v = grp.values.find((x) => x.id === val);
-      if (v)
-        lines.push(
-          `${grp.label}: ${v.label}${v.price > 0 ? " (+€" + v.price + ")" : ""}`,
+function renderStepReview() {
+  return `
+    <div class="cfg-step">
+      <div class="cfg-step-header">
+        <span class="cfg-step-num">Step 4</span>
+        <h2>Review & Order</h2>
+      </div>
+      <div class="cfg-section">
+        <h3 class="cfg-section-title">Your Information</h3>
+        <div class="cfg-form-grid">
+          <input class="cfg-input" id="f-name" type="text" placeholder="Name *" value="${escHtml(s.form.name)}">
+          <input class="cfg-input" id="f-surname" type="text" placeholder="Surname *" value="${escHtml(s.form.surname)}">
+          <input class="cfg-input" id="f-email" type="email" placeholder="Email *" value="${escHtml(s.form.email)}">
+          <input class="cfg-input" id="f-instagram" type="text" placeholder="Instagram (optional)" value="${escHtml(s.form.instagram)}">
+          <input class="cfg-input" id="f-phone" type="text" placeholder="Phone (optional)" value="${escHtml(s.form.phone)}">
+        </div>
+        <textarea class="cfg-input cfg-textarea" id="f-notes" placeholder="Additional notes (optional)">${escHtml(s.form.notes)}</textarea>
+      </div>
+      <div class="cfg-section">
+        <label class="cfg-checkbox">
+          <input type="checkbox" id="f-terms" ${s.form.acceptTerms ? "checked" : ""}>
+          <span class="cfg-checkbox-mark"></span>
+          <span>I accept the terms and conditions</span>
+        </label>
+      </div>
+      <div id="cfg-form-err" class="cfg-form-err"></div>
+      <div class="cfg-step-actions">
+        <button class="cfg-btn cfg-btn-ghost" id="cfg-back-customize">← Back</button>
+        <button class="cfg-btn cfg-btn-primary" id="cfg-submit" ${s.submitting ? "disabled" : ""}>${s.submitting ? "Sending..." : "Submit Order"}</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderSummary() {
+  if (s.submittedOk) return "";
+  const garmentInfo = s.garmentType ? GARMENT[s.garmentType] : null;
+  const modelLabel =
+    s.garmentType && s.model
+      ? GARMENT[s.garmentType].models.find((m) => m.id === s.model)?.label
+      : null;
+  const total = calculateTotal();
+  const type =
+    s.garmentType === "jeans"
+      ? "jeans"
+      : s.garmentType === "tshirt"
+        ? "maglia"
+        : "maglia";
+  const previewCfg = buildPreviewCfg();
+  const svg = renderSVG(type, {}, s.color, null, previewCfg);
+
+  return `
+    <div class="cfg-summary">
+      <div class="cfg-summary-preview">${svg || ""}</div>
+      <h3 class="cfg-summary-title">Order Summary</h3>
+      ${
+        garmentInfo
+          ? `
+        <div class="cfg-summary-row">
+          <span class="cfg-summary-label">Garment</span>
+          <span class="cfg-summary-value">${garmentInfo.label}</span>
+        </div>
+      `
+          : ""
+      }
+      ${
+        modelLabel
+          ? `
+        <div class="cfg-summary-row">
+          <span class="cfg-summary-label">Model</span>
+          <span class="cfg-summary-value">${modelLabel}</span>
+        </div>
+      `
+          : ""
+      }
+      ${
+        s.brand
+          ? `
+        <div class="cfg-summary-row">
+          <span class="cfg-summary-label">Brand</span>
+          <span class="cfg-summary-value">${escHtml(s.brand)}</span>
+        </div>
+      `
+          : ""
+      }
+      <div class="cfg-summary-row">
+        <span class="cfg-summary-label">Color</span>
+        <span class="cfg-summary-value">${getColorLabel(s.color)}</span>
+      </div>
+      ${s.customizations
+        .map((c) => {
+          const def = findCustDef(s.garmentType, c.id);
+          if (!def) return "";
+          return `
+          <div class="cfg-summary-row cfg-summary-cust">
+            <span class="cfg-summary-label">${def.label}</span>
+            <span class="cfg-summary-value">+€${custPrice(c)}</span>
+          </div>
+        `;
+        })
+        .join("")}
+      <div class="cfg-summary-divider"></div>
+      <div class="cfg-summary-total">
+        <span>Total</span>
+        <span class="cfg-summary-amount">€${total.toFixed(2)}</span>
+      </div>
+      <div class="cfg-summary-edit" id="cfg-edit-cust">
+        <button class="cfg-btn cfg-btn-ghost cfg-btn-small" id="cfg-back-to-cust">Edit customizations</button>
+      </div>
+    </div>
+  `;
+}
+
+function buildPreviewCfg() {
+  const cfg = { color: s.color };
+  if (s.garmentType === "tshirt") {
+    const m = GARMENT.tshirt.models.find((x) => x.id === s.model);
+    if (m)
+      cfg.sleeves =
+        m.id === "short-sleeve"
+          ? "short"
+          : m.id === "long-sleeve"
+            ? "long"
+            : "none";
+    const hasCrop = s.customizations.find((c) => c.id === "crop");
+    if (hasCrop) cfg.cropped = true;
+    const hasShorten = s.customizations.find((c) => c.id === "shorten");
+    if (hasShorten) cfg.length = "short";
+    const hasRemove = s.customizations.find((c) => c.id === "remove-sleeves");
+    if (hasRemove) cfg.sleeves = "none";
+  }
+  if (s.garmentType === "jeans") {
+    const m = GARMENT.jeans.models.find((x) => x.id === s.model);
+    if (m) cfg.leg = m.id;
+    const hasFlared = s.customizations.find((c) => c.id === "flared");
+    if (hasFlared) cfg.leg = "flared";
+    const hasSideP = s.customizations.find((c) => c.id === "side-panels");
+    if (hasSideP && !hasFlared) cfg.leg = "wide";
+    const hem = s.customizations.find((c) => c.id === "bottom-hem");
+    if (
+      hem &&
+      (hem.settings.finish === "raw-cut" || hem.settings.finish === "frayed")
+    )
+      cfg.rawHem = true;
+  }
+  return cfg;
+}
+
+function isSettingVisible(setting, cust) {
+  if (!setting.dependsOn) return true;
+  return cust.settings[setting.dependsOn.key] === setting.dependsOn.value;
+}
+
+function calculateTotal() {
+  let t = 0;
+  for (const c of s.customizations) {
+    const def = findCustDef(s.garmentType, c.id);
+    if (!def) continue;
+    t += def.price || 0;
+    for (const setting of def.settings) {
+      if (!isSettingVisible(setting, c)) continue;
+      if (setting.type === "select") {
+        const opt = setting.options?.find(
+          (o) => o.id === c.settings[setting.key],
         );
-    } else if (Array.isArray(val)) {
-      const labels = val
-        .map((vid) => grp.values.find((x) => x.id === vid))
-        .filter(Boolean);
-      if (labels.length)
-        lines.push(
-          `${grp.label}: ${labels.map((x) => x.label + (x.price > 0 ? " (+€" + x.price + ")" : "")).join(", ")}`,
-        );
+        if (opt && opt.price) t += opt.price;
+      }
     }
   }
-  return lines.join("\n");
+  return t;
 }
 
-async function submitOrder() {
-  const name = document.getElementById("f-name")?.value || "";
-  const email = document.getElementById("f-email")?.value || "";
-  const contact = document.getElementById("f-contact")?.value || "";
-  const note = document.getElementById("f-note")?.value || "";
-  const errEl = document.getElementById("form-err");
-  const btn = document.getElementById("btn-order");
-
-  if (!name.trim()) {
-    errEl.innerHTML = '<div class="err-msg">Inserisci il nome</div>';
-    return;
+function custPrice(c) {
+  let t = 0;
+  const def = findCustDef(s.garmentType, c.id);
+  if (!def) return 0;
+  t += def.price || 0;
+  for (const setting of def.settings) {
+    if (!isSettingVisible(setting, c)) continue;
+    if (setting.type === "select") {
+      const opt = setting.options?.find(
+        (o) => o.id === c.settings[setting.key],
+      );
+      if (opt && opt.price) t += opt.price;
+    }
   }
-  if (!email.trim()) {
-    errEl.innerHTML = '<div class="err-msg">Inserisci l\'email</div>';
-    return;
-  }
-  errEl.innerHTML = "";
-  btn.disabled = true;
-  btn.textContent = "Invio in corso...";
-
-  const total = getPrice();
-  const modifiche = getModificaDetails();
-  const type = getProductType();
-  const sel = getSelections();
-  const svg = renderSVG(type, sel, state.color);
-  const gt = getGarmentType(state.garmentType);
-
-  let capoDesc = "";
-  if (state.mode === "own") {
-    capoDesc = gt ? gt.name : state.garmentType;
-  } else if (state.mode === "seller") {
-    capoDesc =
-      (state.seller ? state.seller.name + " — " : "") +
-      (state.product ? state.product.name : "");
-  }
-
-  try {
-    await send({
-      type: "configurazione",
-      mode: state.mode === "own" ? "own" : "seller",
-      name: name.trim(),
-      email: email.trim(),
-      contact: contact.trim() || "Non fornito",
-      note: note.trim() || "Nessuna",
-      capo: capoDesc,
-      colore: getColorLabel(state.color),
-      modifiche: modifiche || "Nessuna modifica",
-      totale: "€" + total.toFixed(2),
-      configurazione: svg || "",
-    });
-    document.getElementById("riepilogo").innerHTML = `
-      <div class="done-box">
-        <div class="check">&#10003;</div>
-        <h3>Richiesta inviata!</h3>
-        <p>La tua configurazione &egrave; stata ricevuta. Il venditore ti contatter&agrave; con un preventivo.</p>
-        <button class="btn btn-primary" onclick="location.reload()">Nuova configurazione</button>
-      </div>`;
-  } catch (e) {
-    errEl.innerHTML = `<div class="err-msg">Errore: ${e.message}</div>`;
-    btn.disabled = false;
-    btn.textContent = "Invia richiesta";
-  }
+  return t;
 }
 
-function initSellerSearch() {
-  const input = document.getElementById("seller-search-input");
-  const results = document.getElementById("seller-search-results");
+function findCustDef(type, id) {
+  const list = CUSTOMIZATIONS[type];
+  if (!list) return null;
+  return list.find((d) => d.id === id) || null;
+}
+
+function escHtml(str) {
+  if (!str) return "";
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function bindSearch() {
+  const input = document.getElementById("cfg-search-input");
+  const results = document.getElementById("cfg-search-results");
   if (!input || !results) return;
 
   function search() {
-    const q = input.value;
-    const sellers = searchSellers(q);
-    if (sellers.length === 0) {
-      results.innerHTML =
-        '<div class="seller-search-empty">Nessun venditore trovato</div>';
+    const q = input.value.toLowerCase().trim();
+    if (!q) {
+      results.innerHTML = "";
+      results.classList.remove("open");
       return;
     }
-    results.innerHTML = sellers
-      .map(
-        (s) =>
-          `<div class="seller-search-item" data-seller-id="${s.id}">
-            <strong>${s.name}</strong>
-            <span>${s.tagline}</span>
-          </div>`,
-      )
-      .join("");
-    results.querySelectorAll("[data-seller-id]").forEach((el) => {
+    const hits = [];
+
+    for (const [key, g] of Object.entries(GARMENT)) {
+      if (g.label.toLowerCase().includes(q) || key.includes(q)) {
+        hits.push({ type: "garment", label: g.label, id: key });
+      }
+      for (const m of g.models) {
+        if (m.label.toLowerCase().includes(q) || m.id.includes(q)) {
+          hits.push({
+            type: "model",
+            label: `${g.label} — ${m.label}`,
+            garmentType: key,
+            modelId: m.id,
+          });
+        }
+      }
+    }
+
+    for (const [gtype, list] of Object.entries(CUSTOMIZATIONS)) {
+      for (const c of list) {
+        if (c.label.toLowerCase().includes(q) || c.id.includes(q)) {
+          hits.push({
+            type: "cust",
+            label: c.label,
+            garmentType: gtype,
+            custId: c.id,
+          });
+        }
+      }
+    }
+
+    if (hits.length === 0) {
+      results.innerHTML =
+        '<div class="cfg-search-empty">No results found</div>';
+    } else {
+      results.innerHTML = hits
+        .map((h) => {
+          if (h.type === "garment")
+            return `<button class="cfg-search-item" data-search-garment="${h.id}">${h.label}</button>`;
+          if (h.type === "model")
+            return `<button class="cfg-search-item" data-search-model="${h.garmentType}:${h.modelId}">${h.label}</button>`;
+          return `<button class="cfg-search-item" data-search-cust="${h.garmentType}:${h.custId}">${h.label}</button>`;
+        })
+        .join("");
+    }
+    results.classList.add("open");
+
+    results.querySelectorAll("[data-search-garment]").forEach((el) => {
       el.addEventListener("click", () => {
-        selectSeller(el.dataset.sellerId);
+        s.hasGarment = true;
+        s.garmentType = el.dataset.searchGarment;
+        s.step = "garment";
+        input.value = "";
+        results.innerHTML = "";
+        results.classList.remove("open");
+        render();
       });
+    });
+    results.querySelectorAll("[data-search-model]").forEach((el) => {
+      const [gt, mid] = el.dataset.searchModel.split(":");
+      s.hasGarment = true;
+      s.garmentType = gt;
+      s.model = mid;
+      s.step = "customize";
+      input.value = "";
+      results.innerHTML = "";
+      results.classList.remove("open");
+      render();
+    });
+    results.querySelectorAll("[data-search-cust]").forEach((el) => {
+      const [gt, cid] = el.dataset.searchCust.split(":");
+      s.hasGarment = true;
+      s.garmentType = gt;
+      s.step = "customize";
+      const def = findCustDef(gt, cid);
+      if (def && !s.customizations.find((x) => x.id === cid)) {
+        addCustomization(cid);
+      }
+      input.value = "";
+      results.innerHTML = "";
+      results.classList.remove("open");
+      render();
     });
   }
 
   input.addEventListener("input", search);
-  document
-    .getElementById("seller-search-btn")
-    ?.addEventListener("click", search);
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".cfg-search")) {
+      results.classList.remove("open");
+    }
+  });
 }
 
-function selectSeller(id) {
-  const s = getSeller(id);
-  if (!s) return;
-  state.mode = "seller";
-  state.seller = s;
-  state.product = s.products[0] || null;
-  state.selections = {};
-  document
-    .querySelectorAll("[data-mode]")
-    .forEach((b) => b.classList.toggle("active", b.dataset.mode === "seller"));
-  document.getElementById("seller-search-input").value = "";
-  document.getElementById("seller-search-results").innerHTML = "";
-  renderControls();
-  renderRiepilogo();
-}
+function bindStepEvents() {
+  const root = document.getElementById("configuratore-root");
+  if (!root) return;
 
-export function initConfiguratore() {
-  const params = getParams();
-  state.mode = "own";
-  state.seller = null;
-  state.product = null;
-  state.garmentType = "maglia";
-  state.selections = {};
-  state.color = "#c13535";
-
-  document.querySelectorAll("[data-mode]").forEach((b) => {
-    b.addEventListener("click", () => {
-      state.mode = b.dataset.mode;
-      if (state.mode === "own") {
-        state.seller = null;
-        state.product = null;
-        state.garmentType = "maglia";
-        state.selections = {};
+  root.querySelectorAll("[data-has-garment]").forEach((el) => {
+    el.addEventListener("click", () => {
+      const v = el.dataset.hasGarment === "true";
+      s.hasGarment = v;
+      if (v) {
+        s.step = "garment";
       } else {
-        state.garmentType = null;
+        s.step = null;
+        renderNoGarment();
+        return;
       }
-      document
-        .querySelectorAll("[data-mode]")
-        .forEach((x) => x.classList.toggle("active", x === b));
-      renderControls();
-      renderRiepilogo();
-      const preview = document.getElementById("preview");
-      if (preview)
-        preview.innerHTML =
-          '<p style="color:var(--text-secondary);font-size:14px">Seleziona le opzioni per vedere l&rsquo;anteprima</p>';
+      render();
     });
   });
 
-  initSellerSearch();
+  root.querySelectorAll("[data-garment-type]").forEach((el) => {
+    el.addEventListener("click", () => {
+      s.garmentType = el.dataset.garmentType;
+      s.model = null;
+      s.customizations = [];
+      render();
+    });
+  });
 
-  if (params.seller) {
-    selectSeller(params.seller);
-  } else {
-    renderControls();
-    renderRiepilogo();
+  root.querySelectorAll("[data-model]").forEach((el) => {
+    el.addEventListener("click", () => {
+      s.model = el.dataset.model;
+      render();
+    });
+  });
+
+  const brandInput = document.getElementById("cfg-brand");
+  if (brandInput) {
+    brandInput.addEventListener("input", () => {
+      s.brand = brandInput.value;
+    });
   }
+
+  document.getElementById("cfg-to-customize")?.addEventListener("click", () => {
+    if (!s.model) return;
+    s.step = "customize";
+    render();
+  });
+
+  document.getElementById("cfg-to-review")?.addEventListener("click", () => {
+    s.step = "review";
+    render();
+  });
+
+  document.getElementById("cfg-back-garment")?.addEventListener("click", () => {
+    s.step = "garment";
+    render();
+  });
+
+  document
+    .getElementById("cfg-back-customize")
+    ?.addEventListener("click", () => {
+      s.step = "customize";
+      bindFormState();
+      render();
+    });
+
+  document.getElementById("cfg-back-to-cust")?.addEventListener("click", () => {
+    s.step = "customize";
+    render();
+  });
+
+  // Color
+  root.querySelectorAll("[data-color]").forEach((el) => {
+    el.addEventListener("click", () => {
+      s.color = el.dataset.color;
+      root
+        .querySelectorAll("[data-color]")
+        .forEach((x) => x.classList.remove("active"));
+      el.classList.add("active");
+      updateSidebar();
+    });
+  });
+
+  // Add customization dropdown
+  document.getElementById("cfg-show-add")?.addEventListener("click", () => {
+    const dd = document.getElementById("cfg-add-dropdown");
+    if (dd) dd.style.display = dd.style.display === "none" ? "block" : "none";
+  });
+
+  root.querySelectorAll("[data-add-cust]").forEach((el) => {
+    el.addEventListener("click", () => {
+      addCustomization(el.dataset.addCust);
+      render();
+    });
+  });
+
+  // Toggle customization panel
+  root.querySelectorAll("[data-toggle-cust]").forEach((el) => {
+    el.addEventListener("click", () => {
+      const i = parseInt(el.dataset.toggleCust);
+      const c = s.customizations[i];
+      if (c) c._open = !c._open;
+      render();
+    });
+  });
+
+  // Remove customization
+  root.querySelectorAll("[data-remove-cust]").forEach((el) => {
+    el.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const i = parseInt(el.dataset.removeCust);
+      s.customizations.splice(i, 1);
+      render();
+    });
+  });
+
+  // Setting toggles
+  root.querySelectorAll("[data-cust-setting]").forEach((el) => {
+    el.addEventListener("change", () => {
+      const i = parseInt(el.dataset.custSetting);
+      const key = el.dataset.settingKey;
+      const c = s.customizations[i];
+      if (c) {
+        c.settings[key] = el.checked;
+        render();
+      }
+    });
+  });
+
+  // Setting selects
+  root.querySelectorAll("[data-cust-opt]").forEach((el) => {
+    el.addEventListener("click", () => {
+      const i = parseInt(el.dataset.custOpt);
+      const key = el.dataset.settingKey;
+      const optId = el.dataset.optId;
+      const c = s.customizations[i];
+      if (c) {
+        c.settings[key] = optId;
+        render();
+      }
+    });
+  });
+
+  // Form fields
+  [
+    "f-name",
+    "f-surname",
+    "f-email",
+    "f-instagram",
+    "f-phone",
+    "f-notes",
+  ].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener("input", () => {
+        s.form[id.replace("f-", "")] = el.value;
+      });
+    }
+  });
+  const terms = document.getElementById("f-terms");
+  if (terms) {
+    terms.addEventListener("change", () => {
+      s.form.acceptTerms = terms.checked;
+    });
+  }
+
+  document.getElementById("cfg-submit")?.addEventListener("click", submitOrder);
+}
+
+function renderNoGarment() {
+  const root = document.getElementById("configuratore-root");
+  if (!root) return;
+  const main = root.querySelector(".cfg-main");
+  if (!main) return;
+  main.innerHTML = `
+    <div class="cfg-step">
+      <div class="cfg-step-header">
+        <span class="cfg-step-num">No garment?</span>
+        <h2>Browse our vendors</h2>
+        <p>Check out our vendors to find the perfect piece to customize.</p>
+      </div>
+      <div class="cfg-vendor-cta">
+        <a class="cfg-btn cfg-btn-primary" href="#/venditori">Browse Vendors →</a>
+        <button class="cfg-btn cfg-btn-ghost" id="cfg-back-start">← Start over</button>
+      </div>
+    </div>
+  `;
+  document.getElementById("cfg-back-start")?.addEventListener("click", () => {
+    Object.assign(s, initState());
+    render();
+  });
+}
+
+function addCustomization(id) {
+  if (s.customizations.find((c) => c.id === id)) return;
+  const def = findCustDef(s.garmentType, id);
+  if (!def) return;
+  const settings = {};
+  for (const setting of def.settings) {
+    settings[setting.key] = setting.default;
+  }
+  s.customizations.push({ id, settings, _open: true });
+}
+
+function updateSidebar() {
+  const sidebar = document.getElementById("cfg-sidebar");
+  if (!sidebar) return;
+  sidebar.innerHTML = renderSummary();
+  const backBtn = document.getElementById("cfg-back-to-cust");
+  if (backBtn) {
+    backBtn.addEventListener("click", () => {
+      s.step = "customize";
+      render();
+    });
+  }
+}
+
+function bindFormState() {
+  for (const key of [
+    "name",
+    "surname",
+    "email",
+    "instagram",
+    "phone",
+    "notes",
+  ]) {
+    const el = document.getElementById("f-" + key);
+    if (el) el.value = s.form[key];
+  }
+  const terms = document.getElementById("f-terms");
+  if (terms) terms.checked = s.form.acceptTerms;
+}
+
+async function submitOrder() {
+  const name = document.getElementById("f-name")?.value || "";
+  const surname = document.getElementById("f-surname")?.value || "";
+  const email = document.getElementById("f-email")?.value || "";
+  const instagram = document.getElementById("f-instagram")?.value || "";
+  const phone = document.getElementById("f-phone")?.value || "";
+  const notes = document.getElementById("f-notes")?.value || "";
+  const acceptTerms = document.getElementById("f-terms")?.checked || false;
+  const errEl = document.getElementById("cfg-form-err");
+
+  s.form = { name, surname, email, instagram, phone, notes, acceptTerms };
+
+  if (!name.trim() || !surname.trim()) {
+    errEl.textContent = "Please enter your name and surname.";
+    return;
+  }
+  if (!email.trim()) {
+    errEl.textContent = "Please enter your email.";
+    return;
+  }
+  if (!acceptTerms) {
+    errEl.textContent = "Please accept the terms and conditions.";
+    return;
+  }
+  errEl.textContent = "";
+  s.submitting = true;
+  render();
+
+  const total = calculateTotal();
+  const garmentLabel = GARMENT[s.garmentType]?.label || "";
+  const modelLabel =
+    s.garmentType && s.model
+      ? GARMENT[s.garmentType].models.find((m) => m.id === s.model)?.label
+      : "";
+  const type = s.garmentType === "jeans" ? "jeans" : "maglia";
+  const previewCfg = buildPreviewCfg();
+  const svg = renderSVG(type, {}, s.color, null, previewCfg);
+
+  const custLines = s.customizations
+    .map((c) => {
+      const def = findCustDef(s.garmentType, c.id);
+      if (!def) return "";
+      const details = def.settings
+        .map((st) => {
+          const v = c.settings[st.key];
+          if (st.type === "boolean") return `${st.label}: ${v ? "Yes" : "No"}`;
+          const opt = st.options?.find((o) => o.id === v);
+          return `${st.label}: ${opt ? opt.label : v}`;
+        })
+        .join(", ");
+      return `${def.label} (${details})`;
+    })
+    .join("\n");
+
+  try {
+    await send({
+      type: "configurazione",
+      mode: "own",
+      name: (name + " " + surname).trim(),
+      email: email.trim(),
+      contact: [instagram, phone].filter(Boolean).join(" / ") || "Non fornito",
+      note: notes.trim() || "Nessuna",
+      capo:
+        garmentLabel +
+        (modelLabel ? " — " + modelLabel : "") +
+        (s.brand ? " (" + s.brand + ")" : ""),
+      colore: getColorLabel(s.color),
+      modifiche: custLines || "Nessuna modifica",
+      totale: "€" + total.toFixed(2),
+      configurazione: svg || "",
+    });
+    s.submitting = false;
+    s.submittedOk = true;
+    render();
+  } catch (e) {
+    s.submitting = false;
+    if (errEl) errEl.textContent = "Error: " + e.message;
+    render();
+  }
+}
+
+export function initConfiguratore() {
+  s = initState();
+  render();
 }
