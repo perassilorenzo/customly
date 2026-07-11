@@ -5,10 +5,10 @@ export function renderVenditori() {
   <section class="hero" style="padding-bottom:40px">
     <div class="container">
       <h1>
-        <span class="line">Per i <span class="highlight">venditori</span></span>
+        <span class="line">Per i <span class="highlight">professionisti</span></span>
         <span class="line">La piattaforma sta arrivando</span>
       </h1>
-      <p>Custom Configurator non &egrave; solo un configuratore. &Egrave; un ecosistema pensato per dare a ogni creator, sarto e brand gli strumenti per offrire personalizzazioni senza caos.</p>
+      <p>Customly &egrave; una piattaforma pensata per dare a ogni customizer, artigiano e brand gli strumenti per offrire personalizzazioni senza caos.</p>
     </div>
   </section>
 
@@ -17,14 +17,14 @@ export function renderVenditori() {
       <div class="section-header">
         <span class="label">La visione</span>
         <h2>Il futuro della personalizzazione</h2>
-        <p>Ogni venditore avr&agrave; il proprio spazio sulla piattaforma, con strumenti professionali per gestire capi, modifiche, prezzi e ordini.</p>
+        <p>Ogni professionista avr&agrave; il proprio spazio sulla piattaforma, con strumenti professionali per gestire capi, modifiche, prezzi e ordini.</p>
       </div>
 
       <div class="seller-features">
         <div class="sf-card">
           <div class="marker">Prossimamente</div>
           <h4>Configuratore personalizzato</h4>
-          <p>Ogni venditore potr&agrave; creare il proprio configuratore con i propri capi, le proprie modifiche e i propri prezzi. Niente template uguali per tutti.</p>
+           <p>Ogni professionista potr&agrave; creare il proprio configuratore con i propri capi, le proprie modifiche e i propri prezzi. Niente template uguali per tutti.</p>
         </div>
         <div class="sf-card">
           <div class="marker">Prossimamente</div>
@@ -39,7 +39,7 @@ export function renderVenditori() {
         <div class="sf-card">
           <div class="marker">Prossimamente</div>
           <h4>Pagina pubblica</h4>
-          <p>Ogni venditore avr&agrave; una pagina unica e condivisibile, personalizzata con il proprio brand, da condividere su social e sito web.</p>
+           <p>Ogni professionista avr&agrave; una pagina unica e condivisibile, personalizzata con il proprio brand, da condividere su social e sito web.</p>
         </div>
         <div class="sf-card">
           <div class="marker">Prossimamente</div>
@@ -65,8 +65,8 @@ export function renderVenditori() {
       <div class="problem-grid">
         <div>
           <div class="card" style="margin-bottom:16px">
-            <h3>Per chi vende</h3>
-            <p>Ricevi richieste gi&agrave; complete e organizzate. Niente pi&ugrave; messaggi interminabili per capire cosa vuole il cliente. Ogni ordine arriva con tutti i dettagli gi&agrave; pronti.</p>
+            <h3>Per chi crea</h3>
+            <p>Ricevi richieste gi&agrave; complete e organizzate. Niente pi&ugrave; messaggi interminabili per capire cosa vuole il cliente. Ogni progetto arriva con tutti i dettagli gi&agrave; pronti.</p>
           </div>
           <div class="card">
             <h3>Per chi acquista</h3>
@@ -75,8 +75,8 @@ export function renderVenditori() {
         </div>
         <div class="card">
           <h3>Perch&eacute; ora</h3>
-          <p>Il mercato della personalizzazione &egrave; in crescita. Sempre pi&ugrave; persone cercano capi unici e personalizzati. I creator e i sarti hanno bisogno di strumenti digitali per gestire questa domanda senza impazzire.</p>
-          <p style="margin-top:12px">Custom Configurator nasce per colmare questo gap: portare la tecnologia nel mondo dell&rsquo;artigianato e della moda indipendente, senza snaturarlo.</p>
+          <p>Il mercato della personalizzazione &egrave; in crescita. Sempre pi&ugrave; persone cercano capi unici e personalizzati. Customizer e artigiani hanno bisogno di strumenti digitali per gestire questa domanda senza impazzire.</p>
+          <p style="margin-top:12px">Customly nasce per colmare questo gap: portare la tecnologia nel mondo dell&rsquo;artigianato e della moda indipendente, senza snaturarlo.</p>
         </div>
       </div>
     </div>
@@ -87,7 +87,7 @@ export function renderVenditori() {
       <div class="section-header" style="margin-bottom:24px">
         <span class="label">Sei interessato?</span>
         <h2>Entra nella lista d&rsquo;attesa</h2>
-        <p style="margin:0 auto">Se sei un creator, sarto o brand e vuoi essere tra i primi ad accedere alla piattaforma, lasciami la tua email.</p>
+        <p style="margin:0 auto">Se sei un customizer, artigiano o brand e vuoi essere tra i primi ad accedere alla piattaforma, lasciami la tua email.</p>
       </div>
       <div style="max-width:440px;margin:0 auto">
         <div style="display:flex;gap:8px">

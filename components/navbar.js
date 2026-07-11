@@ -4,14 +4,14 @@ export function renderNav() {
   const links = [
     { href: "/", label: "Home" },
     { href: "/configuratore", label: "Configuratore" },
-    { href: "/venditori", label: "Venditori" },
+    { href: "/creator", label: "Customizers" },
     { href: "/contatti", label: "Contatti" },
   ];
   const path = getPath();
   return `
 <nav>
   <div class="container">
-    <a href="#" class="nav-logo" data-nav>Custom <span>Configurator</span></a>
+    <a href="#" class="nav-logo" data-nav>Custom<span>ly</span></a>
     <div class="nav-links" id="nav-links">
       ${links.map((l) => `<a href="#${l.href}" class="${path === l.href ? "active" : ""}">${l.label}</a>`).join("")}
     </div>

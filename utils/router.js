@@ -1,8 +1,24 @@
 const routes = {};
+const dynamicRoutes = [];
 let outlet = null;
 
 export function route(path, render) {
-  routes[path] = render;
+  if (path.includes(":")) {
+    const parts = path.split("/");
+    const keys = [];
+    const pattern = parts
+      .map((p) => {
+        if (p.startsWith(":")) {
+          keys.push(p.slice(1));
+          return "([^/]+)";
+        }
+        return p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      })
+      .join("/");
+    dynamicRoutes.push({ re: new RegExp("^" + pattern + "$"), keys, render });
+  } else {
+    routes[path] = render;
+  }
 }
 
 export function init(el) {
@@ -35,10 +51,25 @@ export function getParams() {
 
 function resolve() {
   const path = getPath();
-  const render = routes[path];
+  let render = routes[path];
+  let ctx = {};
+
+  if (!render) {
+    for (const dr of dynamicRoutes) {
+      const m = path.match(dr.re);
+      if (m) {
+        render = dr.render;
+        dr.keys.forEach((k, i) => {
+          ctx[k] = decodeURIComponent(m[i + 1]);
+        });
+        break;
+      }
+    }
+  }
+
   if (render) {
-    outlet.innerHTML = render();
-    if (window._pageInit) window._pageInit();
+    outlet.innerHTML = render(ctx);
+    if (window._pageInit) window._pageInit(ctx);
     updateActiveLink(path);
   }
 }

@@ -7,7 +7,7 @@ export function renderContatti() {
     <div class="section-header">
       <span class="label">Contatti</span>
       <h2>Scrivici</h2>
-      <p>Vuoi candidarti come venditore, proporre un&rsquo;idea, collaborare o semplicemente fare un saluto?</p>
+      <p>Vuoi candidarti come customizer, proporre un&rsquo;idea, collaborare o semplicemente fare un saluto?</p>
     </div>
 
     <div class="contact-wrapper">
@@ -18,7 +18,7 @@ export function renderContatti() {
           <input type="email" id="c-email" placeholder="Email *">
           <select id="c-subject">
             <option value="">Seleziona un motivo</option>
-            <option value="venditore">Voglio diventare venditore</option>
+            <option value="creator">Voglio entrare nella piattaforma</option>
             <option value="feedback">Feedback o idea</option>
             <option value="collaborazione">Richiesta di collaborazione</option>
             <option value="altro">Altro</option>

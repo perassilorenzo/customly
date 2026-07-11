@@ -4,14 +4,15 @@ export function renderFooter() {
   <div class="container">
     <div class="grid">
       <div class="footer-brand">
-        <span class="logo">Custom <span>Configurator</span></span>
-        <p>Piattaforma per la personalizzazione di abbigliamento. Ideata e sviluppata da Lorenzo Perassi.</p>
+        <span class="logo">Custom<span>ly</span></span>
+        <p style="font-style:italic;color:var(--accent)">Make it yours.</p>
+        <p>Piattaforma per la personalizzazione di abbigliamento. Trova un customizer, progetta qualcosa di unico, rendilo tuo. Ideata e sviluppata da Lorenzo Perassi.</p>
       </div>
       <div>
         <h4>Naviga</h4>
         <a href="#/">Home</a><br>
         <a href="#/configuratore">Configuratore</a><br>
-        <a href="#/venditori">Venditori</a><br>
+        <a href="#/creator">Customizers</a><br>
         <a href="#/contatti">Contatti</a>
       </div>
       <div>
@@ -28,9 +29,8 @@ export function renderFooter() {
         <a href="#">Termini</a>
       </div>
     </div>
-    <div class="footer-bottom">
-      <span>&copy; ${new Date().getFullYear()} Lorenzo Perassi</span>
-      <span>Custom Configurator</span>
+    <div class="footer-bottom" style="text-align:center;justify-content:center">
+      <span>A Lorenzo Perassi Production</span>
     </div>
   </div>
 </footer>`;

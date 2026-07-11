@@ -1,11 +1,13 @@
 import { seller as v1 } from "../sellers/venditore1/data.js";
 import { seller as v2 } from "../sellers/venditore2/data.js";
 import { seller as adm } from "../sellers/admin/data.js";
+import { seller as per } from "../sellers/perassi/data.js";
 
 const registry = {
   venditore1: v1,
   venditore2: v2,
   admin: adm,
+  perassi: per,
 };
 
 export function getSeller(id) {

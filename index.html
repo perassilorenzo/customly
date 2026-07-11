@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Custom Configurator - Personalizza il tuo abbigliamento in tempo reale"
+      content="Customly - Trova un customizer, progetta qualcosa di unico, rendilo tuo."
     />
-    <title>Custom Configurator</title>
+    <title>Customly</title>
     <link rel="stylesheet" href="styles/main.css" />
   </head>
   <body>
@@ -23,11 +23,13 @@
       } from "./pages/configuratore.js";
       import { renderVenditori, initVenditori } from "./pages/venditori.js";
       import { renderContatti, initContatti } from "./pages/contatti.js";
+      import { renderCreator, initCreator } from "./pages/creator.js";
 
       function wrap(html, initFn) {
-        return () => {
+        return (ctx) => {
           window._pageInit = initFn;
-          return renderNav() + html + renderFooter();
+          const content = typeof html === "function" ? html(ctx) : html;
+          return renderNav() + content + renderFooter();
         };
       }
 
@@ -36,6 +38,9 @@
       route("/venditore", wrap(renderConfiguratore(), initConfiguratore));
       route("/venditori", wrap(renderVenditori(), initVenditori));
       route("/contatti", wrap(renderContatti(), initContatti));
+      route("/creator", wrap(renderCreator, initCreator));
+      route("/creator/", wrap(renderCreator, initCreator));
+      route("/creator/:id", wrap(renderCreator, initCreator));
 
       init(document.getElementById("app"));
       initNav();
