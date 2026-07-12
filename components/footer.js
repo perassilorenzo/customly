@@ -6,7 +6,7 @@ export function renderFooter() {
       <div class="footer-brand">
         <span class="logo">Custom<span>ly</span></span>
         <p style="font-style:italic;color:var(--accent)">Make it yours.</p>
-        <p>Piattaforma per la personalizzazione di abbigliamento. Trova un customizer, progetta qualcosa di unico, rendilo tuo. Ideata e sviluppata da Lorenzo Perassi.</p>
+        <p>La piattaforma per la custom fashion. Trova un professionista, configura un capo, rendilo tuo.</p>
       </div>
       <div>
         <h4>Naviga</h4>

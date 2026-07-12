@@ -10,7 +10,7 @@ export function renderHome() {
         <span class="line">Your vision. Your style.</span>
         <span class="line"><span class="highlight">Make it yours.</span></span>
       </h1>
-      <p>Customly connette persone e customizer indipendenti per progettare capi personalizzati, trasformando idee e ispirazioni in progetti pronti per essere realizzati.</p>
+      <p>Trova il customizer giusto, progetta un capo su misura e trasforma la tua idea in qualcosa di concreto. Tutto in un unico posto.</p>
       <div class="hero-btns">
         <button class="btn btn-primary" data-nav-creator>Scopri i customizer</button>
         <button class="btn btn-secondary" data-nav-config>Prova il configuratore</button>
@@ -23,25 +23,25 @@ export function renderHome() {
     <div class="container">
       <div class="section-header">
         <span class="label">Il problema</span>
-        <h2>Creare un capo unico non dovrebbe essere cos&igrave; complicato</h2>
-        <p>Chi vuole qualcosa di diverso non sa a chi rivolgersi. Chi crea non ha uno spazio per mostrare il proprio lavoro. Le idee si perdono in messaggi senza struttura.</p>
+        <h2>Creare qualcosa di unico non dovrebbe essere cos&igrave; difficile</h2>
+        <p>Chi cerca qualcosa di speciale non sa da dove iniziare. Chi crea fatica a farsi trovare. Il risultato? Idee perse e collaborazioni mai avviate.</p>
       </div>
       <div class="problem-grid">
         <div class="problem-list">
-          <div class="problem-item"><span class="icon">01</span> Difficile trovare un customizer con lo stile giusto</div>
-          <div class="problem-item"><span class="icon">02</span> Spiegare un'idea senza strumenti visivi</div>
-          <div class="problem-item"><span class="icon">03</span> Artigiani con talento ma senza visibilit&agrave;</div>
-          <div class="problem-item"><span class="icon">04</span> Richieste che arrivano senza una struttura</div>
-          <div class="problem-item"><span class="icon">05</span> Opportunit&agrave; perse tra messaggi infiniti</div>
+          <div class="problem-item"><span class="icon">01</span> Trovare il customizer giusto non &egrave; semplice</div>
+          <div class="problem-item"><span class="icon">02</span> Comunicare un'idea senza strumenti visivi &egrave; frustrante</div>
+          <div class="problem-item"><span class="icon">03</span> Molti artigiani hanno talento ma poca visibilit&agrave;</div>
+          <div class="problem-item"><span class="icon">04</span> Le richieste arrivano senza struttura</div>
+          <div class="problem-item"><span class="icon">05</span> Le opportunit&agrave; si perdono tra messaggi infiniti</div>
         </div>
         <div>
           <div class="card" style="margin-bottom:16px">
-            <h3>Per chi vuole un capo unico</h3>
-            <p>&Egrave; difficile trovare professionisti capaci di realizzare la propria idea. Spiegare precisamente ci&ograve; che si vuole senza uno strumento visivo &egrave; frustrante.</p>
+            <h3>Vuoi un capo unico</h3>
+            <p>Trovi il professionista giusto e progetti un capo su misura. Ogni dettaglio &egrave; deciso da te.</p>
           </div>
           <div class="card">
-            <h3>Per chi crea</h3>
-            <p>Farsi conoscere &egrave; complicato. Manca uno spazio dove mostrare il proprio lavoro, ricevere richieste organizzate e trasformare un'idea in un progetto chiaro.</p>
+            <h3>Sei un customizer</h3>
+            <p>Hai un profilo professionale, ricevi richieste strutturate e trasformi le idee in progetti concreti.</p>
           </div>
         </div>
       </div>
@@ -52,29 +52,38 @@ export function renderHome() {
     <div class="container">
       <div class="section-header">
         <span class="label">La soluzione</span>
-        <h2>Dal pensiero al capo finale</h2>
-        <p>Customly crea un collegamento diretto tra chi vuole qualcosa di diverso e chi lo pu&ograve; realizzare. Ogni professionista ha il proprio spazio, ogni cliente pu&ograve; esplorare stili, configurare un capo e renderlo davvero suo.</p>
+        <h2>Come funziona</h2>
+        <p>Trovi il professionista, configuri il capo, definisci ogni dettaglio e avvii la collaborazione. Semplice e diretto.</p>
       </div>
-      <div class="timeline">
-        <div class="tl-item">
-          <div class="tl-card"><div class="card"><div class="num">01</div><h3>Trova il tuo customizer</h3><p>Scopri customizer indipendenti, artigiani e brand emergenti con stili diversi e scegli chi pu&ograve; dare forma alla tua idea.</p></div></div>
-          <div class="tl-node"><span class="tl-num">01</span></div>
-          <div class="tl-side"><img class="tl-img" src="assets/first-solution.jpg" alt=""></div>
+      <div class="steps">
+        <div class="steps-line"></div>
+        <div class="step">
+          <div class="step-dot">01</div>
+          <div class="step-content">
+            <h3>Trova il customizer</h3>
+            <p>Esplora profili, stili e specializzazioni. Scegli il professionista giusto per il tuo progetto.</p>
+          </div>
         </div>
-        <div class="tl-item">
-          <div class="tl-side"></div>
-          <div class="tl-node"><span class="tl-num">02</span></div>
-          <div class="tl-card"><div class="card"><div class="num">02</div><h3>Progetta il tuo capo</h3><p>Scegli modello, dettagli e modifiche per creare una configurazione personalizzata che rifletta il tuo stile.</p></div></div>
+        <div class="step">
+          <div class="step-dot">02</div>
+          <div class="step-content">
+            <h3>Configura il capo</h3>
+            <p>Seleziona modello, materiali e modifiche. Costruisci il capo esatto che hai in mente.</p>
+          </div>
         </div>
-        <div class="tl-item">
-          <div class="tl-card"><div class="card"><div class="num">03</div><h3>Definisci ogni dettaglio</h3><p>Visualizza il progetto, aggiungi note e riferimenti per dare al professionista tutte le informazioni necessarie.</p></div></div>
-          <div class="tl-node"><span class="tl-num">03</span></div>
-          <div class="tl-side"></div>
+        <div class="step">
+          <div class="step-dot">03</div>
+          <div class="step-content">
+            <h3>Completa il progetto</h3>
+            <p>Aggiungi note, riferimenti e varianti. Hai tutto sotto controllo prima di inviare.</p>
+          </div>
         </div>
-        <div class="tl-item">
-          <div class="tl-side"></div>
-          <div class="tl-node"><span class="tl-num">04</span></div>
-          <div class="tl-card"><div class="card"><div class="num">04</div><h3>Rendi reale la tua idea</h3><p>Invia il progetto al customizer e definitive insieme la realizzazione. Niente messaggi persi o richieste fraintese.</p></div></div>
+        <div class="step">
+          <div class="step-dot">04</div>
+          <div class="step-content">
+            <h3>Invia e collabora</h3>
+            <p>Invia il progetto al customizer e definisci insieme la realizzazione. Zero fraintendimenti.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -83,8 +92,8 @@ export function renderHome() {
   <section class="section">
     <div class="container">
       <div class="section-header">
-        <span class="label">Anteprima</span>
-        <h2>Trasforma un'idea in un progetto</h2>
+        <span class="label">Configuratore</span>
+        <h2>Dai forma alla tua idea</h2>
       </div>
       <div class="mockup" style="max-width:800px;margin:0 auto">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">
@@ -130,26 +139,26 @@ export function renderHome() {
   <section class="section" style="background:var(--bg-alt)">
     <div class="container">
       <div class="section-header">
-        <span class="label">La visione</span>
-        <h2>Un nuovo modo di vivere la custom fashion</h2>
-        <p>Customly vuole creare un ecosistema dove ogni professionista possa esprimere il proprio stile e ogni persona possa trovare qualcosa che la rappresenti. Make it yours non &egrave; solo personalizzare un capo. &Egrave; trasformarlo in qualcosa che appartiene davvero a te.</p>
+        <span class="label">Perch&egrave; Customly</span>
+        <h2>Costruito per chi crea e per chi sogna</h2>
+        <p>Ogni funzionalit&agrave; &egrave; pensata per rendere il processo pi&ugrave; semplice, professionale e diretto.</p>
       </div>
       <div class="vision-grid">
         <div class="vision-item">
-          <h4>Spazio per ogni professionista</h4>
-          <p>Ogni professionista pu&ograve; avere un profilo personale, mostrare i propri lavori e ricevere progetti gi&agrave; organizzati.</p>
+          <h4>Trova il professionista giusto</h4>
+          <p>Filtra per stile, specializzazione e zona. Contatta direttamente chi pu&ograve; dare forma alla tua idea.</p>
         </div>
         <div class="vision-item">
-          <h4>Richieste organizzate</h4>
-          <p>Ogni progetto arriva con tutte le informazioni necessarie per iniziare una collaborazione senza confusione.</p>
+          <h4>Configura visivamente il progetto</h4>
+          <p>Seleziona modello, dettagli e modifiche in modo visivo e immediato. Il customizer riceve tutto ci&ograve; che serve.</p>
         </div>
         <div class="vision-item">
-          <h4>Il tuo spazio digitale</h4>
-          <p>Un profilo dedicato da condividere sui social e utilizzare come vetrina professionale per il tuo lavoro.</p>
+          <h4>Profili professionali</h4>
+          <p>Ogni customizer ha un profilo con i propri lavori, servizi e stile. Una vetrina professionale sempre accessibile.</p>
         </div>
         <div class="vision-item">
-          <h4>Scopri nuovi talenti</h4>
-          <p>Una community dove trovare nuovi talenti e nuove possibilit&agrave; di personalizzazione.</p>
+          <h4>Una community in crescita</h4>
+          <p>Scopri nuovi talenti, condividi ispirazioni e costruisci una rete di professionisti e appassionati.</p>
         </div>
       </div>
     </div>
@@ -160,27 +169,32 @@ export function renderHome() {
       <div>
         <h3>Ideato e sviluppato da Lorenzo Perassi</h3>
         <p>Studente di Informatica, sviluppatore e customizer con la passione per tecnologia, moda e customizzazione. Customly nasce dall'unione tra mondo digitale e artigianato per creare strumenti che aiutano le persone a dare forma alle proprie idee.</p>
-        <div class="about-tags">
-          <span>Sviluppo web</span>
-          <span>UI/UX Design</span>
-          <span>Custom fashion</span>
-          <span>Denim art</span>
+        <div class="about-social">
+          <h4>Let's connect</h4>
+          <div class="about-tags">
+            <a href="https://instagram.com/diario_di_uno_09" target="_blank" rel="noopener"><span class="tag-ig"><i class="fab fa-instagram"></i>Instagram</span></a>
+            <a href="https://tiktok.com/@diario_di_uno_09" target="_blank" rel="noopener"><span class="tag-tt"><i class="fab fa-tiktok"></i>TikTok</span></a>
+            <a href="https://youtube.com/@diario_di_uno_09" target="_blank" rel="noopener"><span class="tag-yt"><i class="fab fa-youtube"></i>YouTube</span></a>
+            <a href="https://github.com/perassilorenzo" target="_blank" rel="noopener"><span class="tag-gh"><i class="fab fa-github"></i>GitHub</span></a>
+            <a href="https://www.linkedin.com/in/perassilorenzo" target="_blank" rel="noopener"><span class="tag-li"><i class="fab fa-linkedin-in"></i>LinkedIn</span></a>
+            <a href="https://perassilorenzo.github.io/portfolio" target="_blank" rel="noopener"><span class="tag-portfolio"><i class="fas fa-globe"></i>Portfolio</span></a>
+          </div>
         </div>
       </div>
       <div>
         <h3>Roadmap</h3>
-        <div style="margin-top:16px">
-          <div class="roadmap-item" style="padding:0 0 16px 24px;border-left:2px solid var(--border)">
-            <div style="font-family:var(--font-heading);font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.04em">MVP &mdash; Customly</div>
-            <p style="font-size:13px;color:var(--text-secondary)">Il primo passo: profili professionali, configuratori personalizzati e creazione di progetti custom.</p>
+        <div class="roadmap">
+          <div class="roadmap-item">
+            <h4>MVP &mdash; <span style="font-weight:400;text-transform:none">Le fondamenta</span></h4>
+            <p>Primi customizer, profili professionali, configuratore e richieste personalizzate.</p>
           </div>
-          <div class="roadmap-item" style="padding:0 0 16px 24px;border-left:2px solid var(--border)">
-            <div style="font-family:var(--font-heading);font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.04em">Customizer Network</div>
-            <p style="font-size:13px;color:var(--text-secondary)">La crescita: nuovi customizer, pi&ugrave; stili, pi&ugrave; possibilit&agrave; di personalizzazione.</p>
+          <div class="roadmap-item">
+            <h4>Espansione &mdash; <span style="font-weight:400;text-transform:none">Una piattaforma in crescita</span></h4>
+            <p>Pi&ugrave; professionisti, nuovi strumenti, maggiore personalizzazione e un'esperienza sempre pi&ugrave; completa.</p>
           </div>
-          <div class="roadmap-item" style="padding:0 0 0 24px;border-left:2px solid transparent">
-            <div style="font-family:var(--font-heading);font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.04em">Fashion Community</div>
-            <p style="font-size:13px;color:var(--text-secondary)">La visione: scoprire talenti, condividere idee e creare una nuova community dedicata alla custom fashion.</p>
+          <div class="roadmap-item">
+            <h4>Community &mdash; <span style="font-weight:400;text-transform:none">La visione</span></h4>
+            <p>Customly diventa il punto di riferimento della custom fashion, creando una community dove clienti e professionisti possono incontrarsi, scoprire nuovi stili e realizzare capi unici.</p>
           </div>
         </div>
       </div>
@@ -202,17 +216,4 @@ export function initHome() {
       .getElementById("soluzione")
       ?.scrollIntoView({ behavior: "smooth" });
   });
-
-  const obs = new IntersectionObserver(
-    (entries) =>
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          e.target.classList.add("visible");
-          const tl = e.target.closest(".timeline");
-          if (tl) tl.classList.add("line-drawn");
-        }
-      }),
-    { threshold: 0.15 },
-  );
-  document.querySelectorAll(".tl-item").forEach((el) => obs.observe(el));
 }

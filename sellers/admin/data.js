@@ -4,7 +4,7 @@ export const seller = {
   tagline: "Il configuratore base — personalizza il tuo capo.",
   bio: "Configuratore ufficiale. Seleziona il capo che hai, scegli le modifiche e invia la richiesta. Tutte le personalizzazioni sono realizzate a mano.",
   style: "Personalizzazione artigianale su misura.",
-  image: null,
+  image: "sellers/admin/images/pfp.jpg",
   contacts: {
     instagram: null,
     email: null,

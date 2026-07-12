@@ -5,7 +5,7 @@ export const seller = {
   bio: "Minimalismo sporco. Non inseguiamo trend, creiamo capi che respirano. Ogni pezzo \u00e8 pensato per durare, per invecchiare bene.",
   style:
     "Minimalismo sporco, colori naturali, tessuti grezzi, finiture artigianali.",
-  image: null,
+  image: "sellers/venditore2/images/pfp.jpg",
   contacts: {
     instagram: "https://instagram.com/rawspirit",
     email: "raw.spirit@example.com",

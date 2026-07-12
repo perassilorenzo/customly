@@ -1,5 +1,11 @@
 import { getCustomizer, getAllCustomizers } from "../data/customizers.js";
 import { navigate } from "../utils/router.js";
+import {
+  getStatus,
+  setStatus,
+  resetStatus,
+  statusLabel,
+} from "../utils/product-status.js";
 
 function esc(s) {
   if (!s) return "";
@@ -116,35 +122,149 @@ function renderAvailableForCustomization(c) {
 
 function renderProducts(c) {
   if (!c.products || !c.products.length) return "";
-  const statusLabel = {
-    available: "Available",
-    sold: "Sold",
-    reserved: "Reserved",
-  };
   return `
     <div class="creator-section" data-section="products">
       <div class="creator-section-title">Shop</div>
       <div class="creator-products">
         ${c.products
-          .map(
-            (p) => `
-          <div class="creator-product-card">
+          .filter((p) => getStatus(p) !== "sold")
+          .map((p) => {
+            const st = getStatus(p);
+            return `
+          <div class="creator-product-card" data-product-id="${p.id}" data-customizer-id="${c.id}">
             <div class="creator-product-image">
               ${p.image ? `<img src="${p.image}" alt="${esc(p.name)}">` : "&#9670;"}
             </div>
             <div class="creator-product-body">
               <div class="creator-product-header">
                 <h4>${esc(p.name)}</h4>
-                <span class="creator-product-status creator-product-status--${p.status}">${statusLabel[p.status] || p.status}</span>
+                <span class="creator-product-status creator-product-status--${st}">${statusLabel(st)}</span>
               </div>
               <p>${esc(p.description)}</p>
               <div class="creator-product-footer">
-                <span class="creator-product-price">€${p.price}</span>
+                <span class="creator-product-price">\u20ac${p.price}</span>
               </div>
             </div>
-          </div>`,
-          )
+            <div class="creator-product-admin" data-admin-controls="${p.id}">
+              <select data-status-select="${p.id}" data-customizer-id="${c.id}">
+                <option value="available"${st === "available" ? " selected" : ""}>Disponibile</option>
+                <option value="in_trattativa"${st === "in_trattativa" ? " selected" : ""}>In trattativa</option>
+                <option value="sold"${st === "sold" ? " selected" : ""}>Venduto</option>
+              </select>
+            </div>
+          </div>`;
+          })
           .join("")}
+      </div>
+    </div>`;
+}
+
+function renderProductModal(p, c) {
+  const st = getStatus(p);
+  const mainMedia = p.image
+    ? `<img src="${p.image}" alt="${esc(p.name)}">`
+    : `<div class="product-modal-placeholder">&#9670;</div>`;
+  const hasGallery = p.gallery && p.gallery.length;
+  const allMedia = hasGallery ? [p.image, ...p.gallery] : [p.image];
+  return `
+    <div class="product-modal-overlay" data-product-modal>
+      <div class="product-modal">
+        <button class="product-modal-close" data-close-product-modal>&times;</button>
+        <div class="product-modal-grid">
+          <div class="product-modal-images">
+            <div class="product-modal-main-image" data-media-index="0">
+              ${mainMedia}
+            </div>
+            ${
+              hasGallery
+                ? `
+              <button class="product-modal-arrow product-modal-arrow--left" data-gallery-prev>&lsaquo;</button>
+              <button class="product-modal-arrow product-modal-arrow--right" data-gallery-next>&rsaquo;</button>
+              <div class="product-modal-gallery" data-gallery-items='${JSON.stringify(allMedia)}'>
+                ${allMedia
+                  .map((m, i) => {
+                    const isMov = m && m.endsWith(".mov");
+                    return `<div class="product-modal-thumb${i === 0 ? " active" : ""}" data-gallery-index="${i}">
+                    ${isMov ? `<video src="${m}" muted loop playsinline></video>` : `<img src="${m}" alt="">`}
+                  </div>`;
+                  })
+                  .join("")}
+              </div>`
+                : ""
+            }
+          </div>
+          <div class="product-modal-info">
+            <div class="creator-product-header">
+              <h3>${esc(p.name)}</h3>
+              <span class="creator-product-status creator-product-status--${st}">${statusLabel(st)}</span>
+            </div>
+            <div class="product-modal-price">\u20ac${p.price}</div>
+            <p class="product-modal-desc">${esc(p.popupDescription || p.description)}</p>
+            ${p.details ? `<div class="product-modal-details">${esc(p.details)}</div>` : ""}
+            <div class="product-modal-sizes">
+              <strong>Misura:</strong>
+              <div class="product-modal-size-options">
+                ${(p.sizes || []).map((s) => `<span class="product-modal-size selected">${s}</span>`).join("")}
+              </div>
+            </div>
+            <div class="product-modal-actions">
+              ${
+                st === "available"
+                  ? `
+                <button class="cfg-btn cfg-btn-primary" data-open-inquiry="${c.id}:${p.id}">Richiedi informazioni</button>
+                <button class="cfg-btn cfg-btn-secondary" data-open-purchase="${c.id}:${p.id}">Acquista</button>
+              `
+                  : `
+                <span class="product-sold-out-badge">Non disponibile</span>
+              `
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderInquiryForm(c, p) {
+  return `
+    <div class="product-modal-overlay" data-inquiry-modal>
+      <div class="product-modal product-form-modal">
+        <button class="product-modal-close" data-close-inquiry>&times;</button>
+        <h3>Richiedi informazioni</h3>
+        <p class="product-form-subtitle">${esc(p.name)} \u2014 ${esc(c.name)}</p>
+        <form class="product-form" data-inquiry-form data-customizer-id="${c.id}" data-product-id="${p.id}">
+          <div class="product-form-row">
+            <input type="text" name="nome" class="cfg-input" placeholder="Nome" required>
+            <input type="email" name="email" class="cfg-input" placeholder="Email" required>
+          </div>
+          <input type="text" name="telefono" class="cfg-input" placeholder="Telefono (opzionale)">
+          <textarea name="messaggio" class="cfg-textarea" placeholder="Cosa vuoi sapere? Es: disponibilit\u00e0, tempi, personalizzazioni..." rows="4" required></textarea>
+          <button type="submit" class="cfg-btn cfg-btn-primary">Invia richiesta</button>
+        </form>
+      </div>
+    </div>`;
+}
+
+function renderPurchaseForm(c, p) {
+  return `
+    <div class="product-modal-overlay" data-purchase-modal>
+      <div class="product-modal product-form-modal">
+        <button class="product-modal-close" data-close-purchase>&times;</button>
+        <h3>Acquista</h3>
+        <p class="product-form-subtitle">${esc(p.name)} \u2014 \u20ac${p.price}</p>
+        <form class="product-form" data-purchase-form data-customizer-id="${c.id}" data-product-id="${p.id}">
+          <div class="product-form-row">
+            <input type="text" name="nome" class="cfg-input" placeholder="Nome e cognome" required>
+            <input type="email" name="email" class="cfg-input" placeholder="Email" required>
+          </div>
+          <div class="product-form-row">
+            <input type="text" name="telefono" class="cfg-input" placeholder="Telefono" required>
+            <input type="text" name="citta" class="cfg-input" placeholder="Citt\u00e0">
+          </div>
+          <textarea name="messaggio" class="cfg-textarea" placeholder="Note sull'ordine (taglia, indirizzo di spedizione, richieste speciali...)" rows="4"></textarea>
+          <button type="submit" class="cfg-btn cfg-btn-primary">Richiedi acquisto</button>
+        </form>
+        <p class="product-form-note">Il venditore ti contatter\u00e0 per confermare disponibilit\u00e0 e accordarsi sui dettagli.</p>
       </div>
     </div>`;
 }
@@ -232,28 +352,63 @@ function renderReviews(c) {
 }
 
 function renderSocial(c) {
-  const links = [];
-  if (c.links.instagram)
-    links.push({ href: c.links.instagram, label: "Instagram", icon: "ig" });
-  if (c.links.email)
-    links.push({
-      href: "mailto:" + c.links.email,
-      label: "Email",
-      icon: "mail",
+  const links = c.links || {};
+  const badges = [];
+  if (links.portfolio)
+    badges.push({
+      href: links.portfolio,
+      label: "Portfolio",
+      icon: "fas fa-globe",
+      cls: "tag-portfolio",
     });
-  if (!links.length) return "";
+  if (links.instagram)
+    badges.push({
+      href: links.instagram,
+      label: "Instagram",
+      icon: "fab fa-instagram",
+      cls: "tag-ig",
+    });
+  if (links.tiktok)
+    badges.push({
+      href: links.tiktok,
+      label: "TikTok",
+      icon: "fab fa-tiktok",
+      cls: "tag-tt",
+    });
+  if (links.youtube)
+    badges.push({
+      href: links.youtube,
+      label: "YouTube",
+      icon: "fab fa-youtube",
+      cls: "tag-yt",
+    });
+  if (links.github)
+    badges.push({
+      href: links.github,
+      label: "GitHub",
+      icon: "fab fa-github",
+      cls: "tag-gh",
+    });
+  if (links.linkedin)
+    badges.push({
+      href: links.linkedin,
+      label: "LinkedIn",
+      icon: "fab fa-linkedin-in",
+      cls: "tag-li",
+    });
+  if (links.email)
+    badges.push({
+      href: "mailto:" + links.email,
+      label: "Email",
+      icon: "fas fa-envelope",
+      cls: "tag-email",
+    });
+  if (!badges.length) return "";
   return `
     <div class="creator-section" data-section="social">
       <div class="creator-section-title">Connect</div>
-      <div class="creator-social">
-        ${links
-          .map(
-            (l) => `
-          <a href="${esc(l.href)}" target="_blank" rel="noopener" class="creator-social-link">
-            ${l.label}
-          </a>`,
-          )
-          .join("")}
+      <div class="creator-connect-badges">
+        ${badges.map((b) => `<a href="${esc(b.href)}" target="_blank" rel="noopener" class="creator-connect-badge ${b.cls}"><i class="${b.icon}"></i>${esc(b.label)}</a>`).join("")}
       </div>
     </div>`;
 }
@@ -270,6 +425,7 @@ function renderBottomCta(c) {
 }
 
 function renderProfileSidebar(c) {
+  const links = c.links || {};
   return `
     <div class="creator-sidebar-card">
       <div class="creator-sidebar-avatar">${avatarImg(c, 56, "creator-sidebar-avatar")}</div>
@@ -277,12 +433,12 @@ function renderProfileSidebar(c) {
       <div class="creator-sidebar-city">${esc(c.city)}${c.country ? `, ${esc(c.country)}` : ""}</div>
       <button class="cfg-btn cfg-btn-primary creator-sidebar-cta" data-start-creator="${c.id}">Start customizing</button>
       ${
-        c.links.instagram
+        links.portfolio
           ? `
         <div class="creator-sidebar-info">
           <div class="creator-sidebar-info-item">
-            <span class="creator-sidebar-info-label">Instagram</span>
-            <a href="${esc(c.links.instagram)}" target="_blank" class="creator-sidebar-info-value">${esc(c.links.instagram.replace(/^https?:\/\/(www\.)?instagram\.com\//, "@"))}</a>
+            <span class="creator-sidebar-info-label">Portfolio</span>
+            <a href="${esc(links.portfolio)}" target="_blank" class="creator-sidebar-info-value">perassilorenzo.com</a>
           </div>
         </div>`
           : ""
@@ -601,6 +757,228 @@ export function initCreator() {
         );
       else navigate(`/configuratore?creator=${id}`);
     }
+
+    /* Product card click -> open modal (only if available) */
+    const prodCard = e.target.closest("[data-product-id]");
+    if (
+      prodCard &&
+      !e.target.closest("[data-close-product-modal]") &&
+      !e.target.closest("[data-open-inquiry]") &&
+      !e.target.closest("[data-open-purchase]") &&
+      !e.target.closest("[data-inquiry-modal]") &&
+      !e.target.closest("[data-purchase-modal]") &&
+      !e.target.closest("[data-thankyou-modal]")
+    ) {
+      const pid = prodCard.dataset.productId;
+      const cid = prodCard.dataset.customizerId;
+      const c = getCustomizer(cid);
+      const p = c && c.products ? c.products.find((x) => x.id === pid) : null;
+      if (c && p && getStatus(p) === "available") {
+        const modal = renderProductModal(p, c);
+        document.body.insertAdjacentHTML("beforeend", modal);
+      }
+    }
+
+    /* Close product modal */
+    if (e.target.closest("[data-close-product-modal]")) {
+      const modal = document.querySelector("[data-product-modal]");
+      if (modal) modal.remove();
+      return;
+    }
+    if (
+      e.target.closest("[data-product-modal]") &&
+      !e.target.closest(".product-modal")
+    ) {
+      const modal = document.querySelector("[data-product-modal]");
+      if (modal) modal.remove();
+      return;
+    }
+
+    /* Gallery navigation */
+    if (
+      e.target.closest("[data-gallery-next]") ||
+      e.target.closest("[data-gallery-prev]")
+    ) {
+      const gallery = document.querySelector(".product-modal-gallery");
+      const mainImg = document.querySelector(".product-modal-main-image");
+      if (!gallery) return;
+      const thumbs = gallery.querySelectorAll(".product-modal-thumb");
+      if (!thumbs.length) return;
+      const active = gallery.querySelector(".product-modal-thumb.active");
+      let idx = active ? parseInt(active.dataset.galleryIndex) : 0;
+      const items = JSON.parse(gallery.dataset.galleryItems);
+      if (e.target.closest("[data-gallery-next]"))
+        idx = (idx + 1) % items.length;
+      else idx = (idx - 1 + items.length) % items.length;
+      thumbs.forEach((t) => t.classList.remove("active"));
+      thumbs[idx].classList.add("active");
+      thumbs[idx].scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+      const src = items[idx];
+      if (src && src.endsWith(".mov")) {
+        mainImg.innerHTML = `<video src="${src}" autoplay muted loop playsinline></video>`;
+      } else {
+        mainImg.innerHTML = `<img src="${src}" alt="">`;
+      }
+    }
+
+    /* Gallery thumb click */
+    const thumb = e.target.closest("[data-gallery-index]");
+    if (thumb) {
+      const gallery = thumb.closest(".product-modal-gallery");
+      const mainImg = document.querySelector(".product-modal-main-image");
+      const items = JSON.parse(gallery.dataset.galleryItems);
+      const idx = parseInt(thumb.dataset.galleryIndex);
+      gallery
+        .querySelectorAll(".product-modal-thumb")
+        .forEach((t) => t.classList.remove("active"));
+      thumb.classList.add("active");
+      const src = items[idx];
+      if (src && src.endsWith(".mov")) {
+        mainImg.innerHTML = `<video src="${src}" autoplay muted loop playsinline></video>`;
+      } else {
+        mainImg.innerHTML = `<img src="${src}" alt="">`;
+      }
+    }
+
+    /* Open inquiry form */
+    const inqBtn = e.target.closest("[data-open-inquiry]");
+    if (inqBtn) {
+      const parts = inqBtn.dataset.openInquiry.split(":");
+      const c = getCustomizer(parts[0]);
+      const p =
+        c && c.products ? c.products.find((x) => x.id === parts[1]) : null;
+      if (c && p) {
+        document.querySelector("[data-product-modal]")?.remove();
+        document.body.insertAdjacentHTML("beforeend", renderInquiryForm(c, p));
+      }
+    }
+
+    /* Close inquiry */
+    if (e.target.closest("[data-close-inquiry]")) {
+      document.querySelector("[data-inquiry-modal]")?.remove();
+      return;
+    }
+    if (
+      e.target.closest("[data-inquiry-modal]") &&
+      !e.target.closest(".product-form-modal")
+    ) {
+      document.querySelector("[data-inquiry-modal]")?.remove();
+      return;
+    }
+
+    /* Open purchase form */
+    const purBtn = e.target.closest("[data-open-purchase]");
+    if (purBtn) {
+      const parts = purBtn.dataset.openPurchase.split(":");
+      const c = getCustomizer(parts[0]);
+      const p =
+        c && c.products ? c.products.find((x) => x.id === parts[1]) : null;
+      if (c && p) {
+        document.querySelector("[data-product-modal]")?.remove();
+        document.body.insertAdjacentHTML("beforeend", renderPurchaseForm(c, p));
+      }
+    }
+
+    /* Close purchase */
+    if (e.target.closest("[data-close-purchase]")) {
+      document.querySelector("[data-purchase-modal]")?.remove();
+      return;
+    }
+    if (
+      e.target.closest("[data-purchase-modal]") &&
+      !e.target.closest(".product-form-modal")
+    ) {
+      document.querySelector("[data-purchase-modal]")?.remove();
+      return;
+    }
+
+    /* Close thank-you */
+    if (e.target.closest("[data-close-thankyou]")) {
+      document.querySelector("[data-thankyou-modal]")?.remove();
+      return;
+    }
+    if (
+      e.target.closest("[data-thankyou-modal]") &&
+      !e.target.closest(".product-form-modal")
+    ) {
+      document.querySelector("[data-thankyou-modal]")?.remove();
+      return;
+    }
+  });
+
+  /* Form submissions */
+  document.addEventListener("submit", (e) => {
+    if (e.target.closest("[data-inquiry-form]")) {
+      e.preventDefault();
+      const form = e.target.closest("[data-inquiry-form]");
+      const data = new FormData(form);
+      const obj = Object.fromEntries(data.entries());
+      obj.type = "inquiry";
+      obj.customizerId = form.dataset.customizerId;
+      obj.productId = form.dataset.productId;
+      console.log("Inquiry submitted:", obj);
+      form.closest("[data-inquiry-modal]")?.remove();
+      document.body.insertAdjacentHTML(
+        "beforeend",
+        `
+        <div class="product-modal-overlay" data-thankyou-modal>
+          <div class="product-modal product-form-modal" style="text-align:center;padding:48px 24px">
+            <h3>Grazie!</h3>
+            <p style="color:var(--text-secondary);margin:12px 0 24px">La tua richiesta \u00e8 stata inviata. Il customizer ti contatter\u00e0 a breve.</p>
+            <button class="cfg-btn cfg-btn-primary" data-close-thankyou>Chiudi</button>
+          </div>
+        </div>
+      `,
+      );
+    }
+    if (e.target.closest("[data-purchase-form]")) {
+      e.preventDefault();
+      const form = e.target.closest("[data-purchase-form]");
+      const data = new FormData(form);
+      const obj = Object.fromEntries(data.entries());
+      obj.type = "purchase";
+      obj.customizerId = form.dataset.customizerId;
+      obj.productId = form.dataset.productId;
+      console.log("Purchase submitted:", obj);
+      /* Mark product as in trattativa */
+      const c = getCustomizer(obj.customizerId);
+      if (c && c.products) {
+        const p = c.products.find((x) => x.id === obj.productId);
+        if (p) {
+          p.status = "in_trattativa";
+          setStatus(p.id, "in_trattativa");
+        }
+      }
+      form.closest("[data-purchase-modal]")?.remove();
+      document.body.insertAdjacentHTML(
+        "beforeend",
+        `
+        <div class="product-modal-overlay" data-thankyou-modal>
+          <div class="product-modal product-form-modal" style="text-align:center;padding:48px 24px">
+            <h3>Richiesta inviata!</h3>
+            <p style="color:var(--text-secondary);margin:12px 0 24px">Il venditore ti contatter\u00e0 per confermare la disponibilit\u00e0 e accordarsi sui dettagli dell'ordine.</p>
+            <button class="cfg-btn cfg-btn-primary" data-close-thankyou>Chiudi</button>
+          </div>
+        </div>
+      `,
+      );
+      /* Update badge on page */
+      const card = document.querySelector(
+        `[data-product-id="${obj.productId}"]`,
+      );
+      if (card) {
+        const badge = card.querySelector(".creator-product-status");
+        if (badge) {
+          badge.className =
+            "creator-product-status creator-product-status--in-trattativa";
+          badge.textContent = "In trattativa";
+        }
+      }
+    }
   });
   document.addEventListener("click", (e) => {
     const btn = e.target.closest("[data-scroll]");
@@ -717,11 +1095,38 @@ export function initCreator() {
   /* List page: checkbox toggle visual */
   document.addEventListener("change", (e) => {
     const cb = e.target.closest("[data-filter-opt]");
-    if (!cb) return;
-    cb.closest(".creator-filter-checkbox")?.classList.toggle(
-      "checked",
-      cb.checked,
-    );
+    if (cb) {
+      cb.closest(".creator-filter-checkbox")?.classList.toggle(
+        "checked",
+        cb.checked,
+      );
+      return;
+    }
+    /* Admin: product status select */
+    const sel = e.target.closest("[data-status-select]");
+    if (sel) {
+      const pid = sel.dataset.statusSelect;
+      const newStatus = sel.value;
+      setStatus(pid, newStatus);
+      /* Update badge on page */
+      const card = document.querySelector(`[data-product-id="${pid}"]`);
+      if (card) {
+        const badge = card.querySelector(".creator-product-status");
+        if (badge) {
+          badge.className = `creator-product-status creator-product-status--${newStatus}`;
+          badge.textContent = statusLabel(newStatus);
+        }
+      }
+      /* If set to sold, re-render to hide the card */
+      if (newStatus === "sold") {
+        const cid = sel.dataset.customizerId;
+        const section = document.querySelector('[data-section="products"]');
+        if (section) {
+          const c = getCustomizer(cid);
+          if (c) section.outerHTML = renderProducts(c);
+        }
+      }
+    }
   });
 }
 

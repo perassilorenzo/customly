@@ -5,7 +5,7 @@ export const seller = {
   bio: "Nasce dalla strada, dalla voglia di trasformare capi dimenticati in pezzi unici. Ogni taglio, ogni cucitura, ogni strappo ha una storia.",
   style:
     "Streetwear grezzo, look vissuto, acid wash, patchwork, dettagli fatti a mano.",
-  image: null,
+  image: "sellers/venditore1/images/pfp.jpg",
   contacts: {
     instagram: "https://instagram.com/demonhandmade",
     email: "demon.handmade@example.com",

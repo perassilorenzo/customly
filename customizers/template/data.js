@@ -91,7 +91,7 @@ export const customizer = {
       description:
         "Felpa personalizzata con modifiche uniche e dettagli fatti a mano.",
       price: 90,
-      status: "reserved",
+      status: "available",
     },
   ],
   portfolio: [

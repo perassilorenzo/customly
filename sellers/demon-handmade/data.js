@@ -5,7 +5,7 @@ export const seller = {
   bio: "Demon Handmade nasce dalla strada, dalla voglia di trasformare capi dimenticati in pezzi unici. Ogni taglio, ogni cucitura, ogni strappo ha una storia. Non produciamo in serie, modifichiamo a mano. Jeans tagliati, ricostruiti, dipinti. Maglie strappate e ricucite. Niente \u00e8 uguale, niente \u00e8 perfetto, tutto \u00e8 autentico.",
   style:
     "Streetwear grezzo, look vissuto, acid wash, patchwork, dettagli fatti a mano. Ispirato al punk, al grunge e alla cultura underground.",
-  image: null,
+  image: "sellers/demon-handmade/images/pfp.jpg",
   contacts: {
     instagram: "https://instagram.com/demonhandmade",
     email: "demon.handmade@example.com",

@@ -5,7 +5,7 @@ export const seller = {
   bio: "Raw Spirit \u00e8 minimalismo sporco. Non inseguiamo trend, creiamo capi che respirano. Ogni pezzo \u00e8 pensato per durare, per invecchiare bene, per raccontare chi lo indossa. Lavoriamo solo materiali naturali, tinture vegetali, finiture grezze. Meno \u00e8 pi\u00f9, ma con carattere.",
   style:
     "Minimalismo sporco, colori naturali, tessuti grezzi, finiture artigianali. Ispirato al Giappone, al workwear e alla terra.",
-  image: null,
+  image: "sellers/raw-spirit/images/pfp.jpg",
   contacts: {
     instagram: "https://instagram.com/rawspirit",
     email: "raw.spirit@example.com",
