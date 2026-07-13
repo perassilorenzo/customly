@@ -307,7 +307,7 @@ function renderImageGalleryModal(media, autoPlay) {
               .map(
                 (m, i) => `
               <div class="image-gallery-thumb${i === 0 ? " active" : ""}" data-gallery-index="${i}">
-                ${isMov(m) ? `<video src="${m}" muted loop playsinline></video>` : `<img src="${m}" alt="">`}
+                ${isMov(m) ? `<video src="${m}" ${autoPlay ? "autoplay " : ""}muted loop playsinline></video>` : `<img src="${m}" alt="">`}
               </div>`,
               )
               .join("")}
