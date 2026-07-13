@@ -3720,6 +3720,53 @@ footer a:hover {
   color: #f2c94c;
 }
 
+/* In trattativa: visible but not clickable */
+.creator-product-card[data-product-id] {
+  cursor: pointer;
+}
+.creator-product-card[data-product-id]:has(
+    .creator-product-status--in-trattativa
+  ) {
+  cursor: default;
+  opacity: 0.7;
+}
+.creator-product-card[data-product-id]:has(
+    .creator-product-status--in-trattativa
+  ):hover {
+  border-color: var(--border);
+}
+
+/* Sold items in portfolio */
+.creator-portfolio-item--sold {
+  position: relative;
+}
+.creator-portfolio-item--sold .creator-portfolio-image {
+  position: relative;
+}
+.creator-sold-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  z-index: 1;
+}
+.creator-sold-price {
+  display: inline-block;
+  margin-top: 6px;
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-decoration: line-through;
+}
+
 .creator-product-body > p {
   font-size: 13px;
   color: var(--text-secondary);

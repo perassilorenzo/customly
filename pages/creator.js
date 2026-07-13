@@ -270,12 +270,16 @@ function renderPurchaseForm(c, p) {
 }
 
 function renderPortfolio(c) {
-  if (!c.portfolio || !c.portfolio.length) return "";
+  const portfolioItems = c.portfolio || [];
+  const soldProducts = c.products
+    ? c.products.filter((p) => getStatus(p) === "sold")
+    : [];
+  if (!portfolioItems.length && !soldProducts.length) return "";
   return `
     <div class="creator-section" data-section="portfolio">
       <div class="creator-section-title">Previous projects</div>
       <div class="creator-portfolio">
-        ${c.portfolio
+        ${portfolioItems
           .map(
             (p) => `
           <div class="creator-portfolio-item">
@@ -293,6 +297,22 @@ function renderPortfolio(c) {
                 </div>`
                   : ""
               }
+            </div>
+          </div>`,
+          )
+          .join("")}
+        ${soldProducts
+          .map(
+            (p) => `
+          <div class="creator-portfolio-item creator-portfolio-item--sold">
+            <div class="creator-portfolio-image">
+              ${p.image ? `<img src="${p.image}" alt="${esc(p.name)}">` : "&#9632;"}
+              <span class="creator-sold-badge">Venduto</span>
+            </div>
+            <div class="creator-portfolio-body">
+              <h4>${esc(p.name)}</h4>
+              <p>${esc(p.description)}</p>
+              <span class="creator-sold-price">\u20ac${p.price}</span>
             </div>
           </div>`,
           )
@@ -1106,7 +1126,12 @@ export function initCreator() {
     const sel = e.target.closest("[data-status-select]");
     if (sel) {
       const pid = sel.dataset.statusSelect;
+      const cid = sel.dataset.customizerId;
       const newStatus = sel.value;
+      const c = getCustomizer(cid);
+      const oldProduct =
+        c && c.products ? c.products.find((x) => x.id === pid) : null;
+      const oldStatus = oldProduct ? getStatus(oldProduct) : null;
       setStatus(pid, newStatus);
       /* Update badge on page */
       const card = document.querySelector(`[data-product-id="${pid}"]`);
@@ -1117,14 +1142,31 @@ export function initCreator() {
           badge.textContent = statusLabel(newStatus);
         }
       }
-      /* If set to sold, re-render to hide the card */
-      if (newStatus === "sold") {
-        const cid = sel.dataset.customizerId;
-        const section = document.querySelector('[data-section="products"]');
-        if (section) {
-          const c = getCustomizer(cid);
-          if (c) section.outerHTML = renderProducts(c);
+      /* If set to sold, re-render to hide from shop + show in portfolio */
+      if (newStatus === "sold" && c) {
+        const shopSection = document.querySelector('[data-section="products"]');
+        if (shopSection) shopSection.outerHTML = renderProducts(c);
+        const portfolioSection = document.querySelector(
+          '[data-section="portfolio"]',
+        );
+        if (portfolioSection) portfolioSection.outerHTML = renderPortfolio(c);
+        else {
+          const mainCol = document.querySelector(".creator-main-col");
+          if (mainCol) {
+            const cta = mainCol.querySelector('[data-section="social"]');
+            if (cta) cta.insertAdjacentHTML("beforebegin", renderPortfolio(c));
+            else mainCol.insertAdjacentHTML("beforeend", renderPortfolio(c));
+          }
         }
+      }
+      /* If unsold (back to available/in_trattativa), re-render portfolio to remove from there */
+      if (oldStatus === "sold" && newStatus !== "sold" && c) {
+        const portfolioSection = document.querySelector(
+          '[data-section="portfolio"]',
+        );
+        if (portfolioSection) portfolioSection.outerHTML = renderPortfolio(c);
+        const shopSection = document.querySelector('[data-section="products"]');
+        if (shopSection) shopSection.outerHTML = renderProducts(c);
       }
     }
   });
