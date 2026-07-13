@@ -8,6 +8,7 @@ export function renderNav() {
     { href: "/contatti", label: "Contatti" },
   ];
   const path = getPath();
+  const dark = localStorage.getItem("theme") === "dark";
   return `
 <nav>
   <div class="container">
@@ -15,6 +16,7 @@ export function renderNav() {
     <div class="nav-links" id="nav-links">
       ${links.map((l) => `<a href="#${l.href}" class="${path === l.href ? "active" : ""}">${l.label}</a>`).join("")}
     </div>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Cambia tema">${dark ? "&#9788;" : "&#9790;"}</button>
     <button class="mobile-toggle" id="mobile-toggle" aria-label="Menu">&#9776;</button>
   </div>
 </nav>`;
@@ -35,4 +37,25 @@ export function initNav() {
       document.getElementById("nav-links")?.classList.remove("open"),
     );
   });
+  document
+    .getElementById("theme-toggle")
+    ?.addEventListener("click", toggleTheme);
+  applyTheme();
+}
+
+function applyTheme() {
+  const saved = localStorage.getItem("theme");
+  const dark =
+    saved === "dark" ||
+    (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  document.documentElement.classList.toggle("dark-mode", dark);
+  const btn = document.getElementById("theme-toggle");
+  if (btn) btn.innerHTML = dark ? "&#9788;" : "&#9790;";
+}
+
+function toggleTheme() {
+  const dark = document.documentElement.classList.toggle("dark-mode");
+  localStorage.setItem("theme", dark ? "dark" : "light");
+  const btn = document.getElementById("theme-toggle");
+  if (btn) btn.innerHTML = dark ? "&#9788;" : "&#9790;";
 }
