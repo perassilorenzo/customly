@@ -8,7 +8,10 @@ export function renderNav() {
     { href: "/contatti", label: "Contatti" },
   ];
   const path = getPath();
-  const dark = localStorage.getItem("theme") === "dark";
+  const dark =
+    localStorage.getItem("theme") === "dark" ||
+    (!localStorage.getItem("theme") &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches);
   return `
 <nav>
   <div class="container">
@@ -16,7 +19,10 @@ export function renderNav() {
     <div class="nav-links" id="nav-links">
       ${links.map((l) => `<a href="#${l.href}" class="${path === l.href ? "active" : ""}">${l.label}</a>`).join("")}
     </div>
-    <button class="theme-toggle" id="theme-toggle" aria-label="Cambia tema">${dark ? "&#9788;" : "&#9790;"}</button>
+    <div class="theme-switch" id="theme-switch">
+      <button class="theme-opt${dark ? "" : " active"}" data-theme="light">&#9788; <span class="theme-label">Luce</span></button>
+      <button class="theme-opt${dark ? " active" : ""}" data-theme="dark">&#9790; <span class="theme-label">Scuro</span></button>
+    </div>
     <button class="mobile-toggle" id="mobile-toggle" aria-label="Menu">&#9776;</button>
   </div>
 </nav>`;
@@ -37,25 +43,33 @@ export function initNav() {
       document.getElementById("nav-links")?.classList.remove("open"),
     );
   });
-  document
-    .getElementById("theme-toggle")
-    ?.addEventListener("click", toggleTheme);
-  applyTheme();
+  document.querySelectorAll(".theme-opt").forEach((btn) => {
+    btn.addEventListener("click", () => applyTheme(btn.dataset.theme));
+  });
+  applySavedTheme();
 }
 
-function applyTheme() {
+function applySavedTheme() {
   const saved = localStorage.getItem("theme");
   const dark =
     saved === "dark" ||
     (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches);
   document.documentElement.classList.toggle("dark-mode", dark);
-  const btn = document.getElementById("theme-toggle");
-  if (btn) btn.innerHTML = dark ? "&#9788;" : "&#9790;";
+  syncToggle(dark);
 }
 
-function toggleTheme() {
-  const dark = document.documentElement.classList.toggle("dark-mode");
-  localStorage.setItem("theme", dark ? "dark" : "light");
-  const btn = document.getElementById("theme-toggle");
-  if (btn) btn.innerHTML = dark ? "&#9788;" : "&#9790;";
+function applyTheme(mode) {
+  const dark = mode === "dark";
+  document.documentElement.classList.toggle("dark-mode", dark);
+  localStorage.setItem("theme", mode);
+  syncToggle(dark);
+}
+
+function syncToggle(dark) {
+  document.querySelectorAll(".theme-opt").forEach((btn) => {
+    btn.classList.toggle(
+      "active",
+      btn.dataset.theme === (dark ? "dark" : "light"),
+    );
+  });
 }
