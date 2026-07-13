@@ -54,7 +54,7 @@ Ordering a customized garment today means endless Instagram DMs, WhatsApp voice 
 ### Portfolio & Galleries
 
 - **Image gallery popup**: click any portfolio card to browse all project images and videos in a fullscreen gallery with navigation arrows and thumbnails
-- **Fullscreen image viewer**: click any product image inside the product modal to view it fullscreen in its original format
+- **Fullscreen image viewer**: click any product image inside the product modal to open a scrollable gallery overlay with all product media, navigable with arrows and keyboard
 - **Clickable portfolio links**: portfolio items with a `link` field render the title as a clickable anchor opening in a new tab
 - **Dark/light mode toggle**: sewing-inspired theme switcher with stitch detail, respects system preference
 

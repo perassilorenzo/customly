@@ -1056,19 +1056,28 @@ export function initCreator() {
       mainEl.dataset.mediaIndex = idx;
     }
 
-    /* Product modal main image click -> fullscreen */
+    /* Product modal main image click -> open image gallery with all media */
     if (
       e.target.closest("[data-fullscreen-trigger]") &&
       !e.target.closest("[data-image-gallery-modal]")
     ) {
-      const mainImg = e.target.closest("[data-fullscreen-trigger]");
-      const img = mainImg.querySelector("img");
-      const vid = mainImg.querySelector("video");
-      const src = img ? img.src : vid ? vid.src : null;
-      if (src) {
+      const modal = document.querySelector("[data-product-modal]");
+      if (!modal) return;
+      const gallery = modal.querySelector(".product-modal-gallery");
+      let items;
+      if (gallery) {
+        items = JSON.parse(gallery.dataset.galleryItems);
+      } else {
+        const mainImg = e.target.closest("[data-fullscreen-trigger]");
+        const img = mainImg.querySelector("img");
+        const vid = mainImg.querySelector("video");
+        const src = img ? img.src : vid ? vid.src : null;
+        if (src) items = [src];
+      }
+      if (items && items.length) {
         document.body.insertAdjacentHTML(
           "beforeend",
-          renderFullscreenOverlay(src),
+          renderImageGalleryModal(items, false),
         );
       }
     }
