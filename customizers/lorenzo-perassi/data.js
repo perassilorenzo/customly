@@ -4,7 +4,7 @@ export const customizer = {
   tagline: "Sviluppatore di Customly.",
   bio: "Creo capi personalizzati attraverso rework, modifiche sartoriali e sperimentazione streetwear. Lavoro principalmente su denim e abbigliamento casual, trasformando capi esistenti in pezzi unici con un'identit\u00e0 propria.\n\nOgni progetto nasce da un'idea: un dettaglio, una modifica, un riferimento visivo o una semplice ispirazione. Parto dal capo originale e sviluppo una personalizzazione studiata insieme al cliente, curando stile, materiali e risultato finale.\n\nIl mio approccio unisce artigianato, creativit\u00e0 e recupero. Non realizzo produzioni in serie: ogni capo viene modificato per diventare qualcosa di personale e irripetibile.",
   image: "customizers/lorenzo-perassi/images/pfp.jpg",
-  cover: null,
+  cover: "customizers/lorenzo-perassi/images/pfp-banner.png",
   city: "Saluzzo",
   region: "Piemonte",
   country: "Italia",
