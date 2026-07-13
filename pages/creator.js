@@ -314,6 +314,13 @@ function renderPortfolio(c) {
               <p>${esc(p.description)}</p>
               <span class="creator-sold-price">\u20ac${p.price}</span>
             </div>
+            <div class="creator-product-admin" data-admin-controls="${p.id}">
+              <select data-status-select="${p.id}" data-customizer-id="${c.id}">
+                <option value="available">Disponibile</option>
+                <option value="in_trattativa">In trattativa</option>
+                <option value="sold" selected>Venduto</option>
+              </select>
+            </div>
           </div>`,
           )
           .join("")}
