@@ -1056,7 +1056,7 @@ export function initCreator() {
       mainEl.dataset.mediaIndex = idx;
     }
 
-    /* Product modal main image click -> open image gallery with all media */
+    /* Product modal main image click -> open video gallery (autoplay, muted) */
     if (
       e.target.closest("[data-fullscreen-trigger]") &&
       !e.target.closest("[data-image-gallery-modal]")
@@ -1075,10 +1075,13 @@ export function initCreator() {
         if (src) items = [src];
       }
       if (items && items.length) {
-        document.body.insertAdjacentHTML(
-          "beforeend",
-          renderImageGalleryModal(items, false),
-        );
+        const vids = items.filter((m) => isMov(m));
+        if (vids.length) {
+          document.body.insertAdjacentHTML(
+            "beforeend",
+            renderImageGalleryModal(vids, true),
+          );
+        }
       }
     }
 
