@@ -292,6 +292,7 @@ function renderImageGalleryModal(media, autoPlay) {
   const hasGallery = media.length > 1;
   return `
     <div class="image-gallery-overlay" data-image-gallery-modal${autoPlay ? " data-autoplay" : ""}>
+      <div class="image-gallery-backdrop" data-close-image-gallery></div>
       <button class="image-gallery-close" data-close-image-gallery>&times;</button>
       <div class="image-gallery-content">
         <div class="image-gallery-main" data-media-index="0">
