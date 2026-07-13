@@ -4428,6 +4428,10 @@ footer a:hover {
   justify-content: center;
   position: relative;
   padding: 48px 60px 80px;
+  pointer-events: none;
+}
+.image-gallery-content > * {
+  pointer-events: auto;
 }
 .image-gallery-main {
   flex: 1;
@@ -4565,7 +4569,6 @@ html.dark-mode .cfg-done,
 html.dark-mode .cfg-summary,
 html.dark-mode .cfg-summary-preview,
 html.dark-mode .cfg-project-card-body,
-html.dark-mode .creator-hero-body,
 html.dark-mode .creator-section-cta,
 html.dark-mode .project-card,
 html.dark-mode .product-modal {
