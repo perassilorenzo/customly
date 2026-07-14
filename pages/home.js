@@ -7,8 +7,8 @@ export function renderHome() {
   <section class="hero">
     <div class="container">
       <h1>
-        <span class="line">La tua idea. Il tuo stile.</span>
-        <span class="line"><span class="highlight">Rendilo tuo.</span></span>
+        <span class="line">Your idea. Your style.</span>
+        <span class="line"><span class="highlight">Make it yours.</span></span>
       </h1>
       <p>Trova un customizer italiano, configura un capo personalizzato e trasforma la tua idea in qualcosa di concreto. Custom fashion, streetwear su misura e capi unici — tutto in un unico posto.</p>
       <div class="hero-btns">
