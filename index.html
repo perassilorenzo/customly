@@ -3,19 +3,104 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#c13535" />
+    <meta name="robots" content="index, follow" />
     <meta
       name="description"
-      content="Customly - La piattaforma per la custom fashion. Trova un professionista, configura un capo, rendilo tuo."
+      content="Customly connette clienti e customizer indipendenti per creare abbigliamento personalizzato, unico e su misura. Trova il professionista giusto, configura il capo e avvia la collaborazione."
     />
-    <title>Customly</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    <title>Customly | Trova customizer e crea capi personalizzati</title>
+    <meta
+      property="og:title"
+      content="Customly | Trova customizer e crea capi personalizzati"
     />
+    <meta
+      property="og:description"
+      content="Customly connette clienti e customizer indipendenti per creare abbigliamento personalizzato, unico e su misura."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://customly.it/" />
+    <meta property="og:site_name" content="Customly" />
+    <meta
+      property="og:image"
+      content="https://customly.it/assets/wallpaper.jpg"
+    />
+    <meta property="og:locale" content="it_IT" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Customly | Trova customizer e crea capi personalizzati"
+    />
+    <meta
+      name="twitter:description"
+      content="Customly connette clienti e customizer indipendenti per creare abbigliamento personalizzato, unico e su misura."
+    />
+    <meta
+      name="twitter:image"
+      content="https://customly.it/assets/wallpaper.jpg"
+    />
+    <link rel="canonical" href="https://customly.it/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
     <link rel="stylesheet" href="styles/main.css" />
+    <noscript>
+      <style>
+        .page,
+        .cfg-layout,
+        .creator-profile,
+        .creator-grid-list {
+          display: block !important;
+        }
+      </style>
+    </noscript>
   </head>
   <body>
+    <noscript>
+      <div
+        style="
+          max-width: 800px;
+          margin: 0 auto;
+          padding: 40px 20px;
+          font-family: system-ui, sans-serif;
+        "
+      >
+        <h1>Customly — Custom fashion su misura</h1>
+        <p>
+          Customly è una piattaforma italiana che connette clienti e customizer
+          indipendenti per creare abbigliamento personalizzato.
+        </p>
+        <h2>Come funziona</h2>
+        <ol>
+          <li>
+            Trova il customizer giusto tra i profili degli artigiani italiani.
+          </li>
+          <li>Configura il capo con il configuratore visivo.</li>
+          <li>Invia il progetto e avvia la collaborazione.</li>
+        </ol>
+        <h2>Pagine</h2>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/configuratore">Configuratore</a></li>
+          <li><a href="/creator">Customizer</a></li>
+          <li><a href="/contatti">Contatti</a></li>
+          <li><a href="/privacy">Privacy Policy</a></li>
+          <li><a href="/terms">Termini e condizioni</a></li>
+        </ul>
+        <p>
+          Per utilizzare pienamente la piattaforma, abilita JavaScript nel tuo
+          browser.
+        </p>
+      </div>
+    </noscript>
+    <a href="#content" class="skip-link">Vai al contenuto</a>
     <div id="app"></div>
+    <div
+      aria-live="polite"
+      aria-atomic="true"
+      class="sr-only"
+      id="aria-live-region"
+    ></div>
     <script type="module">
       import { route, init, afterRender } from "./utils/router.js";
       import { renderNav, initNav, reinitNav } from "./components/navbar.js";
@@ -35,7 +120,11 @@
         return (ctx) => {
           window._pageInit = initFn;
           const content = typeof html === "function" ? html(ctx) : html;
-          return renderNav() + content + renderFooter();
+          return (
+            renderNav() +
+            `<main id="content" tabindex="-1">${content}</main>` +
+            renderFooter()
+          );
         };
       }
 

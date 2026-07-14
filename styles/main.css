@@ -81,6 +81,40 @@ ul {
   margin: 0 auto;
   padding: 0 24px;
 }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  z-index: 200;
+  padding: 12px 24px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  border-radius: var(--radius);
+  transition: top 0.2s;
+}
+.skip-link:focus {
+  top: 16px;
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible) {
+  outline: none;
+}
 
 /* ---- nav ---- */
 nav {
@@ -4540,6 +4574,33 @@ footer a:hover {
 /* Fullscreen trigger cursor */
 .product-modal-main-image[data-fullscreen-trigger] {
   cursor: zoom-in;
+}
+
+/* ==================== REDUCED MOTION ==================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==================== TOUCH TARGETS (WCAG 2.5.5) ==================== */
+.nav-links a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.theme-btn {
+  min-width: 44px;
+  min-height: 44px;
+}
+.mobile-toggle {
+  min-width: 44px;
+  min-height: 44px;
 }
 
 /* ==================== DARK MODE ==================== */

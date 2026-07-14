@@ -18,16 +18,16 @@ export function renderNav() {
     (!localStorage.getItem("theme") &&
       window.matchMedia("(prefers-color-scheme: dark)").matches);
   return `
-<nav>
+<nav aria-label="Navigazione principale">
   <div class="container">
-    <a href="#" class="nav-logo" data-nav>Custom<span>ly</span></a>
+    <a href="/" class="nav-logo" data-nav>Custom<span>ly</span></a>
     <div class="nav-links" id="nav-links">
-      ${links.map((l) => `<a href="#${l.href}" class="${path === l.href ? "active" : ""}">${l.label}</a>`).join("")}
+      ${links.map((l) => `<a href="${l.href}" class="${path === l.href ? "active" : ""}"${path === l.href ? ' aria-current="page"' : ""}>${l.label}</a>`).join("")}
     </div>
     <button class="theme-btn${dark ? " dark" : ""}" id="theme-btn" aria-label="Cambia tema">
       <span class="theme-knob">${dark ? SVG_MOON : SVG_SUN}</span>
     </button>
-    <button class="mobile-toggle" id="mobile-toggle" aria-label="Menu">&#9776;</button>
+    <button class="mobile-toggle" id="mobile-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">&#9776;</button>
   </div>
 </nav>`;
 }
@@ -42,14 +42,21 @@ export function initNav() {
         syncBtn();
       }
       if (e.target.closest("#mobile-toggle")) {
-        document.getElementById("nav-links")?.classList.toggle("open");
+        const btn = document.getElementById("mobile-toggle");
+        const links = document.getElementById("nav-links");
+        links?.classList.toggle("open");
+        if (btn)
+          btn.setAttribute("aria-expanded", links?.classList.contains("open"));
       }
       if (e.target.closest("[data-nav]")) {
         e.preventDefault();
         navigate("/");
       }
       if (e.target.closest(".nav-links a")) {
-        document.getElementById("nav-links")?.classList.remove("open");
+        const links = document.getElementById("nav-links");
+        links?.classList.remove("open");
+        const btn = document.getElementById("mobile-toggle");
+        if (btn) btn.setAttribute("aria-expanded", "false");
       }
     });
   }

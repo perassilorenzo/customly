@@ -6,7 +6,7 @@ export function renderContatti() {
   <div class="container">
     <div class="section-header">
       <span class="label">Contatti</span>
-      <h2>Scrivici</h2>
+      <h1>Scrivici</h1>
       <p>Vuoi candidarti come customizer, proporre un&rsquo;idea, collaborare o semplicemente fare un saluto?</p>
     </div>
 
@@ -14,40 +14,40 @@ export function renderContatti() {
       <div class="contact-form">
         <div id="contact-err"></div>
         <div class="frm" id="contact-form">
-          <input type="text" id="c-name" placeholder="Nome *">
-          <input type="email" id="c-email" placeholder="Email *">
-          <select id="c-subject">
+          <input type="text" id="c-name" placeholder="Nome *" aria-label="Nome">
+          <input type="email" id="c-email" placeholder="Email *" aria-label="Email">
+          <select id="c-subject" aria-label="Motivo del contatto">
             <option value="">Seleziona un motivo</option>
             <option value="creator">Voglio entrare nella piattaforma</option>
             <option value="feedback">Feedback o idea</option>
             <option value="collaborazione">Richiesta di collaborazione</option>
             <option value="altro">Altro</option>
           </select>
-          <textarea id="c-msg" placeholder="Il tuo messaggio *" rows="5"></textarea>
+          <textarea id="c-msg" placeholder="Il tuo messaggio *" rows="5" aria-label="Messaggio"></textarea>
           <button class="btn btn-primary" id="c-submit" style="width:100%;justify-content:center">Invia</button>
         </div>
         <div id="contact-done" style="display:none;text-align:center;padding:60px 0">
           <div class="check" style="font-size:48px;font-weight:700;color:var(--success);margin-bottom:8px">&#10003;</div>
           <h3 style="font-family:var(--font-heading);font-size:22px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">Messaggio inviato!</h3>
-          <p style="color:var(--text-secondary)">Ti risponder&ograve; al pi&ugrave; presto.</p>
+          <p style="color:var(--text-secondary)">Ti risponder&agrave; al pi&ugrave; presto.</p>
         </div>
       </div>
 
       <div>
         <div class="contact-channels">
-          <a href="#" class="contact-channel">
+          <a href="https://instagram.com/diario_di_uno_09" target="_blank" rel="noopener noreferrer" class="contact-channel">
             <div>
               <div class="label">Instagram</div>
               <div class="desc">Seguimi per aggiornamenti sul progetto</div>
             </div>
           </a>
-          <a href="#" class="contact-channel">
+          <a href="https://github.com/perassilorenzo" target="_blank" rel="noopener noreferrer" class="contact-channel">
             <div>
               <div class="label">GitHub</div>
               <div class="desc">Codice e progetti open source</div>
             </div>
           </a>
-          <a href="#" class="contact-channel">
+          <a href="https://www.linkedin.com/in/perassilorenzo" target="_blank" rel="noopener noreferrer" class="contact-channel">
             <div>
               <div class="label">LinkedIn</div>
               <div class="desc">Profilo professionale</div>

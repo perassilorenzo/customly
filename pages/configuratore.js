@@ -371,7 +371,7 @@ function renderStepNoGarment() {
       </div>`
           : ci
             ? `<p style="color:var(--text-tertiary);margin-top:16px">No base garments available from this customizer.</p>`
-            : `<div class="cfg-vendor-cta"><a class="cfg-btn cfg-btn-primary" href="#/creator">Discover available customizers →</a></div>`
+            : `<div class="cfg-vendor-cta"><a class="cfg-btn cfg-btn-primary" href="/creator">Discover available customizers →</a></div>`
       }
       <div class="cfg-step-actions" style="margin-top:24px">
         <button class="cfg-btn cfg-btn-ghost" type="button" id="cfg-back-start">← Start over</button>
@@ -1345,7 +1345,7 @@ function renderChooseCreator() {
     <div style="text-align:center;padding:80px 20px">
       <h2 style="font-family:var(--font-heading);font-size:28px;font-weight:600;text-transform:uppercase;letter-spacing:-0.01em;margin-bottom:12px">Choose a professional first</h2>
       <p style="color:var(--text-secondary);margin-bottom:24px">Select a professional to start customizing your garment.</p>
-      <a href="#/creator" class="cfg-btn cfg-btn-primary">Discover customizers →</a>
+      <a href="/creator" class="cfg-btn cfg-btn-primary">Discover customizers →</a>
     </div>`;
 }
 

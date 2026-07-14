@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Reindirizzamento...</title>
+    <script>
+      // GitHub Pages SPA redirect: stores path in query param and redirects to root
+      var l = window.location;
+      l.replace(
+        l.protocol +
+          "//" +
+          l.hostname +
+          (l.port ? ":" + l.port : "") +
+          "/?p=" +
+          encodeURIComponent(l.pathname + l.search + l.hash),
+      );
+    </script>
+  </head>
+  <body></body>
+</html>

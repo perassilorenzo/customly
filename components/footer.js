@@ -10,23 +10,23 @@ export function renderFooter() {
       </div>
       <div>
         <h4>Naviga</h4>
-        <a href="#/">Home</a><br>
-        <a href="#/configuratore">Configuratore</a><br>
-        <a href="#/creator">Customizers</a><br>
-        <a href="#/contatti">Contatti</a>
+        <a href="/">Home</a><br>
+        <a href="/configuratore">Configuratore</a><br>
+        <a href="/creator">Customizers</a><br>
+        <a href="/contatti">Contatti</a>
       </div>
       <div>
         <h4>Social</h4>
-        <a href="#">Instagram</a><br>
-        <a href="#">GitHub</a><br>
-        <a href="#">LinkedIn</a><br>
-        <a href="#">TikTok</a>
+        <a href="https://instagram.com/diario_di_uno_09" target="_blank" rel="noopener noreferrer">Instagram</a><br>
+        <a href="https://github.com/perassilorenzo" target="_blank" rel="noopener noreferrer">GitHub</a><br>
+        <a href="https://www.linkedin.com/in/perassilorenzo" target="_blank" rel="noopener noreferrer">LinkedIn</a><br>
+        <a href="https://tiktok.com/@diario_di_uno_09" target="_blank" rel="noopener noreferrer">TikTok</a>
       </div>
       <div>
         <h4>Info</h4>
         <a href="mailto:lorenzo@example.com">Email</a><br>
-        <a href="#/privacy">Privacy</a><br>
-        <a href="#/terms">Termini</a>
+        <a href="/privacy">Privacy</a><br>
+        <a href="/terms">Termini</a>
       </div>
     </div>
     <div class="footer-bottom" style="text-align:center;justify-content:center">
