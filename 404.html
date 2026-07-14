@@ -6,7 +6,8 @@
     <script>
       var l = window.location;
       var p = l.pathname;
-      var base = p.replace(/\/[^/]*$/, "/");
+      var parts = p.split("/");
+      var base = "/" + (parts[1] || "") + "/";
       var qs = new URLSearchParams(l.search);
       if (qs.get("p") === p) {
         l.replace(base);
