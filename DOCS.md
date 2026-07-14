@@ -161,15 +161,15 @@ customly/
 - Routing lato client senza ricaricare la pagina
 - Rendering dinamico dell'HTML tramite template literals (`` `${...}` ``)
 - Gestione dello stato del configuratore con una macchina a stati
-- Generazione di SVG inline per l'anteprima dei capi
+- Filtraggio dinamico delle modifiche per modello e gruppo
 - Comunicazione con API esterna (Formspree)
 
 ### SVG (inline)
 
 **Cos'è**: Formato vettoriale per grafica.
-**Dove**: Generato dinamicamente in `data/products.js` e inserito direttamente nell'HTML.
-**Perché**: Anteprima live del capo personalizzato senza bisogno di immagini. Vettoriale = si adatta a qualsiasi schermo.
-**Cosa permette**: Disegnare magliette, pantaloni e felpe con modifiche visibili in tempo reale (colore, tagli, stampe, ricami).
+**Dove**: Generato dinamicamente in `data/products.js` (usato solo per preview nella home page, non più nel configuratore).
+**Perché**: Grafica vettoriale per anteprime statiche.
+**Nota**: Il configuratore ora usa placeholder image senza SVG.
 
 ### Formspree
 
@@ -248,7 +248,6 @@ Interazione utente → eventi → stato → re-render
 ┌──────────────────────────────┐
 │    data/*.js                 │
 │  import { getCustomizer }    │
-│  import { renderSVG }        │
 │  dati letti dai registry     │
 └──────────────────────────────┘
                │
@@ -581,8 +580,7 @@ initNav(); // attacca eventi navbar
 **Dati interni**:
 | Variabile | Scopo |
 |---|---|
-| `COLORS` | Array di 7 colori predefiniti con label |
-| `GARMENT` | Oggetto con tipi di capo (T-Shirt, Jeans) e relativi modelli |
+| `GARMENT` | Oggetto con tipi di capo (Shirt, Jeans) e relativi modelli |
 | `CUSTOMIZATIONS` | Oggetto con modifiche disponibili per tipo di capo, prezzi e impostazioni |
 | `s` | Stato globale del configuratore (modulo) |
 
@@ -597,7 +595,6 @@ initNav(); // attacca eventi navbar
   model: null,               // modello specifico
   brand: "",                 // marca opzionale
   customizations: [],        // modifiche attive con impostazioni
-  color: "#c13535",          // colore selezionato
   form: { name, surname, email, instagram, phone, notes, acceptTerms },
   submitting: false,
   submittedOk: false
@@ -613,14 +610,13 @@ initNav(); // attacca eventi navbar
 | `renderStepStart()` | Scelta "Hai già un capo?" |
 | `renderStepNoGarment()` | Reindirizzamento a /customizers |
 | `renderStepGarment()` | Scelta tipo capo, modello, marca |
-| `renderStepCustomize()` | Colore + modifiche |
+| `renderStepCustomize()` | Modifiche |
 | `renderCustContent()` | Lista modifiche attive e disponibili |
 | `renderStepReview()` | Riepilogo + form |
-| `renderSummary()` | Sidebar: preview SVG + riepilogo prezzi |
+| `renderSummary()` | Sidebar: riepilogo prezzi |
 | `calculateTotal()` | Calcola prezzo totale |
-| `buildPreviewCfg()` | Mappa stato → config per SVG |
+| `getAvailableCustomizations()` | Filtra modifiche per tipo capo e modello |
 | `submitOrder()` | Valida form, invia a Formspree |
-| `bindSearch()` | Barra di ricerca live |
 | `listen()` | Event delegation centralizzata (click, input, change) |
 
 ---
@@ -889,35 +885,35 @@ Fatto. Il nuovo customizer apparirà automaticamente nella lista su `/customizer
    ▼                                          ▼
 2. GARMENT                               NO-GARMENT
    │                                          │
-   │ Scegli: T-Shirt o Jeans                  "Find a professional to start"
+   │ Scegli: Shirt o Jeans                    "Find a professional to start"
    │ Modello                                  Link a /customizers
    │ Marca (opzionale)                        Bottone "Start over"
    │
    ▼
 3. CUSTOMIZE
    │
-   │ Scegli colore (7 opzioni)
    │ Aggiungi modifiche:
-   │   T-Shirt: Crop, Shorten, Shorten Sleeves, Remove Sleeves
-   │   Jeans: Flared Bottom, Side Panels, Raw Hem
+   │   Shirt: Canotta Taglio Netto, Corta Cucita Bene,
+   │          Croppa Taglio Netto, Croppata Cucito Bene
+   │          (opzioni filtrate per modello, crop mutuamente esclusivi)
+   │   Jeans: Flared Bottom, Side Panels, Raw Hem, Fondo Allungato
    │
    │ Ogni modifica ha impostazioni aggiuntive:
    │   - boolean toggle (es. "Fabric available?")
-   │   - select con opzioni (es. tipo di tessuto, lunghezza)
+   │   - select con opzioni (es. tipo di tessuto)
    │
    ▼
 4. REVIEW
    │
    │ Riepilogo completo:
-   │   - Creator selezionato
+   │   - Customizer selezionato
    │   - Tipo capo + modello + marca
-   │   - Colore
    │   - Modifiche con dettagli
    │   - Prezzo totale
    │
    │ Form contatto:
    │   Nome, Cognome, Email, Instagram (opt), Telefono (opt)
-   │   Note (opt), Accetta termini
+   │   Note (opt), Accetta termini + privacy
    │
    ▼
 5. DONE
@@ -934,15 +930,29 @@ Lo stato `s` tiene traccia di ogni scelta dell'utente. Quando l'utente clicca qu
 2. La funzione modifica lo stato `s`
 3. Viene chiamato `render()` o `updateSidebar()` per aggiornare la UI
 
-Esempio — scelta del colore:
+### Filtraggio modifiche per modello
+
+Le modifiche possono avere una proprietà `models` che limita la disponibilità a certi modelli:
 
 ```js
-if (t.hasAttribute("data-color")) {
-  s.color = t.dataset.color; // aggiorna stato
-  // aggiorna classe active sui pulsanti
-  swatches.forEach((x) => x.classList.remove("active"));
-  t.classList.add("active");
-  updateSidebar(); // aggiorna preview + riepilogo
+{
+  id: "canotta-taglio-netto",
+  models: ["long-sleeve", "short-sleeve"], // solo per questi modelli
+  // ...
+}
+```
+
+`getAvailableCustomizations(garmentType, model)` filtra le modifiche in base al modello selezionato.
+
+### Modifiche mutuamente esclusive
+
+Le modifiche possono avere una proprietà `group` per essere mutuamente esclusive. Se una modifica con `group: "crop"` è attiva, le altre nello stesso gruppo vengono nascoste e rimosse.
+
+```js
+{
+  id: "croppa-taglio-netto",
+  group: "crop", // non si può combinare con "croppata-cucito-bene"
+  // ...
 }
 ```
 
@@ -972,40 +982,16 @@ function calculateTotal() {
 }
 ```
 
-### Anteprima SVG
-
-`renderSummary()` chiama `renderSVG()` da `products.js` con la configurazione corrente. La funzione genera un elemento SVG come stringa, che viene inserito nella sidebar.
-
-`buildPreviewCfg()` traduce lo stato del configuratore nel formato che `renderSVG()` si aspetta:
-
-```js
-function buildPreviewCfg() {
-  const cfg = { color: s.color };
-  if (s.garmentType === "tshirt") {
-    cfg.sleeves = mappaModelloManiche(s.model);
-    if (haModifica("crop")) cfg.cropped = true;
-    // ...
-  }
-  if (s.garmentType === "jeans") {
-    cfg.leg = mappaModelloGambe(s.model);
-    if (haModifica("flared")) cfg.leg = "flared";
-    // ...
-  }
-  return cfg;
-}
-```
-
 ### Invio del progetto
 
 `submitOrder()`:
 
 1. Legge i campi del form dal DOM
-2. Valida: nome, cognome, email, accetta termini
+2. Valida: nome, cognome, email, accetta termini e privacy
 3. Prepara i dati
-4. Genera SVG finale
-5. Chiama `send(data)` da `utils/formspree.js`
-6. Se successo: `s.submittedOk = true`, mostra schermata "Done"
-7. Se errore: mostra messaggio errore
+4. Chiama `send(data)` da `utils/formspree.js`
+5. Se successo: `s.submittedOk = true`, mostra schermata "Done"
+6. Se errore: mostra messaggio errore
 
 ---
 
@@ -1015,15 +1001,12 @@ function buildPreviewCfg() {
 
 Tutti i dati sono **statici** — non c'è database, API o backend. I dati vivono in file JavaScript importati come moduli ES.
 
-| Tipo di dato          | Dove                              | Formato                        |
-| --------------------- | --------------------------------- | ------------------------------ |
-| Profili customizer    | `customizers/*/data.js`           | Oggetto JS esportato           |
-| Profili venditori     | `sellers/*/data.js`               | Oggetto JS esportato           |
-| Colori configuratore  | `pages/configuratore.js` (inline) | Array di oggetti               |
-| Tipi capo             | `pages/configuratore.js` (inline) | Oggetto annidato               |
-| Modifiche disponibili | `pages/configuratore.js` (inline) | Oggetto annidato               |
-| SVG markup            | `data/products.js`                | Funzioni che generano stringhe |
-| Utility colori        | `data/color.js`                   | Funzione `shade()`             |
+| Tipo di dato          | Dove                              | Formato                                 |
+| --------------------- | --------------------------------- | --------------------------------------- |
+| Profili customizer    | `customizers/*/data.js`           | Oggetto JS esportato                    |
+| Profili venditori     | `sellers/*/data.js`               | Oggetto JS esportato                    |
+| Tipi capo             | `pages/configuratore.js` (inline) | Oggetto annidato                        |
+| Modifiche disponibili | `pages/configuratore.js` (inline) | Oggetto annidato con `group` e `models` |
 
 ### Come vengono importati
 
@@ -1035,9 +1018,6 @@ customizers/perassilorenzo/data.js
 sellers/perassi/data.js
         → importato da data/sellers.js
                 → importato da pages/configuratore.js
-
-data/products.js
-        → importato da pages/configuratore.js
 ```
 
 ### Differenza tra dati e registry
@@ -1056,13 +1036,11 @@ Per aggiungere un nuovo **venditore/seller**:
 1. Crea cartella + `data.js` in `sellers/`
 2. Aggiungi import + entry in `data/sellers.js`
 
-Per aggiungere nuovi **colori** nel configuratore:
-
-1. Aggiungi un oggetto all'array `COLORS` in `pages/configuratore.js`
-
 Per aggiungere nuove **modifiche** nel configuratore:
 
 1. Aggiungi un oggetto all'array appropriato in `CUSTOMIZATIONS` in `pages/configuratore.js`
+2. Usa `models: [...]` per limitare la disponibilità a certi modelli
+3. Usa `group: "nome"` per rendere le modifiche mutuamente esclusive
 
 ---
 
@@ -1165,39 +1143,32 @@ body {
 ```
 1. HOME PAGE
    │
-   │ URL: #/
+   │ URL: /customly/
    │ L'utente arriva sulla home. Vede hero, problemi, soluzione, visione.
    │ Clicca "Scopri i customizer"
    │
    ▼
 2. LISTA CUSTOMIZER
    │
-   │ URL: #/customizers
+   │ URL: /customly/customizers
    │ Router carica pages/creator.js → renderList()
-   │ Vede due card: Lorenzo Perassi e Template Profile
+   │ Vede le card dei customizer
    │ Clicca su Lorenzo Perassi
    │
    ▼
 3. PROFILO LORENZO PERASSI
    │
-   │ URL: #/customizers/perassilorenzo
+   │ URL: /customly/customizers/perassilorenzo
    │ Router matcha route dinamica /customizers/:id
-   │ renderProfile(seller) genera HTML profilo:
-   │   - Avatar (placeholder "L")
-   │   - Nome, tagline
-   │   - Bio, stili, esempi lavori
-   │   - Instagram, CTA
-   │ Clicca "Start customizing →"
+   │ renderProfile(seller) genera HTML profilo
+   │ Clicca "Start customizing"
    │
    ▼
 4. CONFIGURATORE (con creator selezionato)
    │
-   │ URL: #/configuratore?creator=perassilorenzo
+   │ URL: /customly/configuratore?creator=perassilorenzo
    │ Router carica pages/configuratore.js
    │ initConfiguratore() legge params.creator = "perassilorenzo"
-   │ getSeller("perassilorenzo") → null
-   │ getCustomizer("perassilorenzo") → trova Lorenzo
-   │ s.creator = "perassilorenzo"
    │ Badge mostra: "Customizer — Lorenzo Perassi"
    │
    ├─ Step 1: "Do you already have a garment?"
@@ -1209,42 +1180,24 @@ body {
    │   Clicca "Continue →"
    │
    ├─ Step 3: Customize
-   │   Sceglie colore "Denim" (#4a6fa5)
    │   Aggiunge modifica "Flared Bottom" (€15)
    │     Imposta tessuto: "Camouflage" (+€12)
    │   Aggiunge modifica "Raw Hem" (€5)
    │     Imposta finish: "Frayed hem" (+€5)
    │
-   │   Sidebar mostra:
-   │   ┌───────────────────────────────┐
-   │   │  [anteprima SVG jeans blu]    │
-   │   │  Your Custom Project          │
-   │   │  Creator: Lorenzo Perassi     │
-   │   │  Garment: Jeans               │
-   │   │  Model: Baggy                 │
-   │   │  Color: Denim                 │
-   │   │  Flared Bottom: +€27         │
-   │   │  Raw Hem: +€10               │
-   │   │  ─────────────────────        │
-   │   │  Total: €37.00               │
-   │   └───────────────────────────────┘
-   │
+   │   Sidebar mostra riepilogo con prezzi
    │   Clicca "Review Order →"
    │
    ├─ Step 4: Review
    │   Vede riepilogo completo
    │   Compila form: Nome, Cognome, Email
-   │   Aggiunge note: "Vorrei le zip laterali"
-   │   Accetta termini
+   │   Accetta termini e privacy
    │   Clicca "Submit project"
-   │
-   │   submitOrder() → send(data) → console.log (Formspree non configurato)
    │
    ▼
 5. DONE
    │
    │ "Request sent!"
-   │ "The professional will contact you with a quote."
    │ Bottone "New project" → ricomincia
 ```
 
@@ -1278,25 +1231,12 @@ Nessun altro file deve essere toccato. Il nuovo customizer appare subito su `/cu
        label: "Nome Modifica",
        desc: "Descrizione della modifica",
        price: 10,
-       preview: "effetto",
+       models: ["skinny", "baggy"], // opzionale: limita a certi modelli
+       group: "nome-gruppo",        // opzionale: mutuamente esclusiva
        settings: [ ... ]
      },
    ]
    ```
-2. Se la modifica cambia l'aspetto visivo, **MODIFICA** `data/products.js` — aggiorna la funzione `renderPants()`, `renderShirt()` o `renderHoodie()` per gestire il nuovo parametro
-3. Se la modifica ha bisogno di un nuovo effetto visivo, aggiorna `buildPreviewCfg()` in `pages/configuratore.js`
-
-### Aggiungere un nuovo colore
-
-**MODIFICA** `pages/configuratore.js` — aggiungi oggetto all'array `COLORS`:
-
-```js
-const COLORS = [
-  { id: "#c13535", label: "Rosso" },
-  { id: "#ff6600", label: "Arancione" }, // nuovo
-  // ...
-];
-```
 
 ### Aggiungere un nuovo tipo di capo (es. Felpa)
 
@@ -1304,9 +1244,6 @@ const COLORS = [
    - Aggiungi entry a `GARMENT` con modelli
    - Aggiungi array a `CUSTOMIZATIONS` con le modifiche disponibili
    - Aggiorna `GARMENT_CATEGORIES`
-   - Aggiorna `buildPreviewCfg()` per gestire il nuovo tipo
-
-2. **MODIFICA** `data/products.js` — se serve una nuova funzione di rendering
 
 ### Aggiungere un nuovo venditore/seller
 
@@ -1334,8 +1271,7 @@ Tutto in `styles/main.css`. Segui le variabili CSS esistenti e la sezione giusta
 | **Module**                | File JS con `import`/`export`                                      | Tutti i file nel progetto                                     |
 | **Template literal**      | Stringa JS con `${variabile}` per interpolare valori               | `` `<h1>${name}</h1>` ``                                      |
 | **SPA**                   | Single-Page Application — non ricarica mai la pagina               | L'intero progetto                                             |
-| **Hash routing**          | Navigazione via `#/path` nel URL                                   | `window.location.hash = "#/customizers"`                      |
-| **SVG inline**            | Grafica vettoriale scritta direttamente nell'HTML                  | Generato da `data/products.js`                                |
+| **PushState routing**     | Navigazione via History API con URL puliti                         | `history.pushState()` in router.js                            |
 | **Formspree**             | Servizio che inoltra form HTML via email                           | `utils/formspree.js`                                          |
 | **CSS custom properties** | Variabili CSS definite in `:root`                                  | `var(--accent)`, `var(--text-secondary)`                      |
 | **Responsive**            | Il layout si adatta a schermi grandi e piccoli                     | Media query a 768px, 900px, 480px                             |

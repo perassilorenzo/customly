@@ -10,7 +10,7 @@
   <br>
   La piattaforma che connette clienti e customizer indipendenti per creare abbigliamento personalizzato, unico e su misura.
   <br>
-  <i>Configuratore visivo con preview SVG, profili professionali e richieste strutturate.</i>
+  <i>Configuratore interattivo con modifiche strutturate, profili professionali e richieste dirette.</i>
 </p>
 
 <p align="center">
@@ -37,9 +37,8 @@ Ordinare un capo personalizzato oggi significa messaggi infiniti su Instagram, v
 ### Per i Clienti
 
 - **Due modalit&agrave;**: configura un capo che gi&agrave; possiedi, o ordina da un customizer registrato
-- **Tipi di capo**: T-Shirt, jeans — con opzioni di personalizzazione specifiche per ogni tipo
-- **Preview SVG in tempo reale**: vedi ogni modifica riflessa istantaneamente su un'anteprima interattiva
-- **Modifiche**: lunghezza maniche, fit, crop, raw hem, patch, lacere, sbiancatura, stampe, ricami, colore e altro
+- **Tipi di capo**: Shirt, jeans — con opzioni di personalizzazione specifiche per ogni tipo
+- **Modifiche**: canotta, crop, accorciamento, maniche, flared, side panels, raw hem, fondo allungato
 - **Calcolatore prezzi live**: prezzo base + sovrapprezzi si aggiornano durante la personalizzazione
 - **Invio diretto**: richiesta completa e strutturata inviata via email con tutti i dettagli
 
@@ -54,15 +53,16 @@ Ordinare un capo personalizzato oggi significa messaggi infiniti su Instagram, v
 - **Galleria immagini**: clicca una card del portfolio per sfogliare tutte le immagini e i video in una galleria fullscreen
 - **Viewer fullscreen**: clicca un'immagine del prodotto per aprire una galleria scrollabile con frecce e thumbnails
 - **Link portfolio cliccabili**: gli elementi con campo `link` rendono il titolo cliccabile in una nuova scheda
-- **Dark/light mode**: toggle con dettaglio a punto macchina, rispetta le preferenze di sistema
 
 ### Opzioni di Personalizzazione per Capo
 
-| T-Shirt                           | Jeans                                           |
-| --------------------------------- | ----------------------------------------------- |
-| Maniche corte / lunghe / senza    | Skinny → Baggy / Flare / Wide / Taper           |
-| Crop / Accorciamento              | Accorciamento / Allungamento                    |
-| Raw hem / Stampe / Patch / Ricami | Raw hem / Patch / Lacere / Sbiancatura / Ricami |
+| Shirt                                            | Jeans                   |
+| ------------------------------------------------ | ----------------------- |
+| Canotta Taglio Netto (long-sleeve, short-sleeve) | Skinny / Flared / Baggy |
+| Corta Cucita Bene (long-sleeve)                  | Flared Bottom           |
+| Croppa Taglio Netto (tutti i modelli)            | Side Panels             |
+| Croppata Cucito Bene (tutti i modelli)           | Raw Hem                 |
+|                                                  | Fondo Allungato         |
 
 ---
 
@@ -72,7 +72,6 @@ Ordinare un capo personalizzato oggi significa messaggi infiniti su Instagram, v
 | ----------------------------------- | --------------------------------------------------------- |
 | **Vanilla JavaScript (ES Modules)** | Frontend zero-dipendenze — nessun framework, nessun build |
 | **CSS (custom properties)**         | Design responsive con dark theme, CSS variables           |
-| **SVG (inline, generato)**          | Anteprima capo in tempo reale generata programmaticamente |
 | **Formspree**                       | Backend per invio form (ordini, contatti)                 |
 | **SPA Router (pushState)**          | Routing client-side con URL puliti e History API          |
 
@@ -114,7 +113,6 @@ index.html              ← Entry point SPA (shell minima)
 ├── pages/              ← Pagine per rotta (home, configuratore, creator, contatti)
 ├── data/               ← Logica business e modelli dati
 │   ├── customizers.js     ← Registry e ricerca customizer
-│   ├── products.js        ← Engine di rendering SVG
 │   └── color.js           ← Utilit&agrave; colori
 ├── customizers/        ← Profili customizer modulari
 │   ├── perassilorenzo/   ← Customizer: Lorenzo Perassi
@@ -178,17 +176,16 @@ Aggiungere un nuovo customizer significa creare una directory con un file `data.
 
 | Customizer          | Stile                      | Specializzazione |
 | ------------------- | -------------------------- | ---------------- |
-| **Lorenzo Perassi** | Custom fashion / upcycling | Denim, T-Shirt   |
+| **Lorenzo Perassi** | Custom fashion / upcycling | Denim, Shirt     |
 | **Template**        | Profilo esempio            | Tutti i capi     |
 
 ---
 
 ## Roadmap
 
-- [x] MVP — configuratore con preview real-time
+- [x] MVP — configuratore interattivo con modifiche strutturate
 - [x] Sistema customizer con profili modulari
 - [x] Portfolio gallerie — popup immagini/video e viewer fullscreen
-- [x] Toggle dark/light mode
 - [x] SEO tecnica — meta tag dinamici, JSON-LD, sitemap, URL puliti
 - [x] GEO readiness — llms.txt, FAQ strutturate, dati leggibili da AI
 - [x] Accessibilit&agrave; — aria, focus management, reduced motion
@@ -215,5 +212,5 @@ Unendo codice e creativit&agrave; per costruire strumenti che rendono la custom 
 ---
 
 <p align="center">
-  <sub>Costruito con vanilla JS, un sacco di SVG math, e una passione per la custom fashion.</sub>
+  <sub>Costruito con vanilla JS e una passione per la custom fashion.</sub>
 </p>
