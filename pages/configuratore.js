@@ -1,17 +1,6 @@
-import { renderSVG, getColorLabel } from "../data/products.js";
 import { send } from "../utils/formspree.js";
 import { getParams, navigate } from "../utils/router.js";
 import { getCustomizer } from "../data/customizers.js";
-
-const COLORS = [
-  { id: "#c13535", label: "Rosso" },
-  { id: "#1a1410", label: "Nero" },
-  { id: "#2d5a3d", label: "Verde" },
-  { id: "#8b7355", label: "Cuoio" },
-  { id: "#f5f0eb", label: "Crema" },
-  { id: "#4a6fa5", label: "Denim" },
-  { id: "#d4a017", label: "Oro" },
-];
 
 const GARMENT = {
   tshirt: {
@@ -196,7 +185,6 @@ function initState() {
     model: null,
     brand: "",
     customizations: [],
-    color: "#c13535",
     form: {
       name: "",
       surname: "",
@@ -432,18 +420,7 @@ function renderStepCustomize() {
       <div class="cfg-step-header">
         <span class="cfg-step-num">Step 3</span>
         <h2>Customize your ${GARMENT[s.garmentType].label}</h2>
-        <p>Pick a color and add the modifications you want.</p>
-      </div>
-      <div class="cfg-section">
-        <h3 class="cfg-section-title">Color</h3>
-        <div class="cfg-color-grid">
-          ${COLORS.map(
-            (c) => `
-            <button class="cfg-color-swatch${s.color === c.id ? " active" : ""}" type="button" data-color="${c.id}" style="--swatch:${c.id}" title="${c.label}">
-              <span class="cfg-color-dot"></span>
-            </button>`,
-          ).join("")}
-        </div>
+        <p>Add the modifications you want.</p>
       </div>
       <div id="cfg-cust-content">${renderCustContent()}</div>
       <div class="cfg-step-actions">
@@ -547,13 +524,6 @@ function renderStepReview() {
             <span class="cfg-project-label">Garment</span>
             <span class="cfg-project-value">${gi ? gi.label : ""}${ml ? " — " + ml : ""}${s.brand ? " (" + s.brand + ")" : ""}</span>
           </div>
-          <div class="cfg-project-row">
-            <span class="cfg-project-label">Color</span>
-            <span class="cfg-project-value">
-              <span class="cfg-project-color-dot" style="background:${s.color}"></span>
-              ${getColorLabel(s.color)}
-            </span>
-          </div>
           ${
             s.customizations.length > 0
               ? `
@@ -637,18 +607,10 @@ function renderSummary() {
       ? GARMENT[s.garmentType].models.find((m) => m.id === s.model)?.label
       : null;
   const total = calculateTotal();
-  const type =
-    s.garmentType === "jeans"
-      ? "jeans"
-      : s.garmentType === "tshirt"
-        ? "maglia"
-        : "maglia";
-  const previewCfg = buildPreviewCfg();
-  const svg = renderSVG(type, {}, s.color, null, previewCfg);
 
   return `
     <div class="cfg-summary">
-      <div class="cfg-summary-preview">${svg || ""}</div>
+      <div class="cfg-summary-preview"><img src="" alt="Preview" class="cfg-preview-img"></div>
       <h3 class="cfg-summary-title">Your Custom Project</h3>
       ${
         ci
@@ -686,10 +648,6 @@ function renderSummary() {
       </div>`
           : ""
       }
-      <div class="cfg-summary-row">
-        <span class="cfg-summary-label">Color</span>
-        <span class="cfg-summary-value">${getColorLabel(s.color)}</span>
-      </div>
       ${s.customizations
         .map((c) => {
           const def = findCustDef(s.garmentType, c.id);
@@ -719,49 +677,6 @@ function renderSummary() {
         <button class="cfg-btn cfg-btn-ghost cfg-btn-small" type="button" id="cfg-back-to-cust">Edit project</button>
       </div>
     </div>`;
-}
-
-function buildPreviewCfg() {
-  const cfg = { color: s.color };
-  if (s.garmentType === "tshirt") {
-    const m = GARMENT.tshirt.models.find((x) => x.id === s.model);
-    if (m)
-      cfg.sleeves =
-        m.id === "short-sleeve"
-          ? "short"
-          : m.id === "long-sleeve"
-            ? "long"
-            : "none";
-    if (s.customizations.find((c) => c.id === "canotta-taglio-netto"))
-      cfg.sleeves = "none";
-    if (s.customizations.find((c) => c.id === "corta-cucita-bene"))
-      cfg.sleeves = "short";
-    if (s.customizations.find((c) => c.id === "croppa-taglio-netto")) {
-      cfg.cropped = true;
-      cfg.rawHem = true;
-    }
-    if (s.customizations.find((c) => c.id === "croppata-cucito-bene"))
-      cfg.cropped = true;
-  }
-  if (s.garmentType === "jeans") {
-    const m = GARMENT.jeans.models.find((x) => x.id === s.model);
-    if (m) cfg.leg = m.id;
-    if (s.customizations.find((c) => c.id === "flared")) cfg.leg = "flared";
-    if (
-      s.customizations.find((c) => c.id === "side-panels") &&
-      !s.customizations.find((c) => c.id === "flared")
-    )
-      cfg.leg = "wide";
-    const hem = s.customizations.find((c) => c.id === "bottom-hem");
-    if (
-      hem &&
-      (hem.settings.finish === "raw-cut" || hem.settings.finish === "frayed")
-    )
-      cfg.rawHem = true;
-    if (s.customizations.find((c) => c.id === "fondo-allungato"))
-      cfg.length = "long";
-  }
-  return cfg;
 }
 
 function isSettingVisible(setting, cust) {
@@ -1005,17 +920,6 @@ function listen() {
     if (t.hasAttribute("data-model")) {
       s.model = t.dataset.model;
       render();
-      return;
-    }
-
-    if (t.hasAttribute("data-color")) {
-      s.color = t.dataset.color;
-      const swatches = root.querySelectorAll("[data-color]");
-      swatches.forEach((x) => x.classList.remove("active"));
-      swatches.forEach((x) => {
-        if (x.dataset.color === s.color) x.classList.add("active");
-      });
-      updateSidebar();
       return;
     }
 
@@ -1282,8 +1186,6 @@ async function submitOrder() {
     s.garmentType && s.model
       ? GARMENT[s.garmentType].models.find((m) => m.id === s.model)?.label
       : "";
-  const type = s.garmentType === "jeans" ? "jeans" : "maglia";
-  const svg = renderSVG(type, {}, s.color, null, buildPreviewCfg());
 
   const custLines = s.customizations
     .map((c) => {
@@ -1313,10 +1215,8 @@ async function submitOrder() {
         garmentLabel +
         (modelLabel ? " — " + modelLabel : "") +
         (s.brand ? " (" + s.brand + ")" : ""),
-      colore: getColorLabel(s.color),
       modifiche: custLines || "Nessuna modifica",
       totale: "€" + total.toFixed(2),
-      configurazione: svg || "",
     });
     s.submitting = false;
     s.submittedOk = true;
