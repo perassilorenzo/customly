@@ -20,9 +20,9 @@ export function renderNav() {
   return `
 <nav aria-label="Navigazione principale">
   <div class="container">
-    <a href="#/" class="nav-logo" data-nav>Custom<span>ly</span></a>
+    <a href="/" class="nav-logo" data-nav>Custom<span>ly</span></a>
     <div class="nav-links" id="nav-links">
-      ${links.map((l) => `<a href="#${l.href}" class="${path === l.href ? "active" : ""}"${path === l.href ? ' aria-current="page"' : ""}>${l.label}</a>`).join("")}
+      ${links.map((l) => `<a href="${l.href}" class="${path === l.href ? "active" : ""}"${path === l.href ? ' aria-current="page"' : ""}>${l.label}</a>`).join("")}
     </div>
     <button class="theme-btn${dark ? " dark" : ""}" id="theme-btn" aria-label="Cambia tema">
       <span class="theme-knob">${dark ? SVG_MOON : SVG_SUN}</span>

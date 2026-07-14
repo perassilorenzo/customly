@@ -31,23 +31,31 @@ export function afterRender(fn) {
 
 export function init(el) {
   outlet = el;
-  window.addEventListener("hashchange", resolve);
-  if (!window.location.hash) window.location.hash = "#/";
+
+  /* Handle GitHub Pages 404 redirect (?p=/path) */
+  const params = new URLSearchParams(window.location.search);
+  const redirectPath = params.get("p");
+  if (redirectPath) {
+    history.replaceState(null, "", redirectPath);
+  }
+
+  window.addEventListener("popstate", resolve);
   resolve();
 }
 
 export function navigate(path) {
-  window.location.hash = "#" + path;
+  const current = getPath();
+  if (current === path) return;
+  history.pushState(null, "", path);
+  resolve();
 }
 
 export function getPath() {
-  const h = window.location.hash.slice(1) || "/";
-  return h.split("?")[0];
+  return window.location.pathname.replace(/\/+$/, "") || "/";
 }
 
 export function getParams() {
-  const h = window.location.hash.slice(1);
-  const qs = h.split("?")[1] || "";
+  const qs = window.location.search.slice(1);
   const p = {};
   for (const part of qs.split("&")) {
     if (!part) continue;
@@ -105,7 +113,7 @@ function render404() {
   <div class="container" style="text-align:center;padding:120px 20px">
     <h1 style="font-family:var(--font-heading);font-size:72px;font-weight:700;color:var(--accent);margin-bottom:8px">404</h1>
     <p style="font-size:18px;color:var(--text-secondary);margin-bottom:32px">Pagina non trovata.</p>
-    <a href="#/" class="btn btn-primary">Torna alla home</a>
+    <a href="/" class="btn btn-primary">Torna alla home</a>
   </div>
 </div>`;
 }
@@ -113,6 +121,6 @@ function render404() {
 function updateActiveLink(path) {
   document.querySelectorAll(".nav-links a").forEach((a) => {
     const href = a.getAttribute("href");
-    a.classList.toggle("active", href === "#" + path);
+    a.classList.toggle("active", href === path);
   });
 }

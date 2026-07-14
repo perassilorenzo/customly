@@ -597,7 +597,7 @@ function renderProfile(c) {
             </div>
             <div class="creator-sidebar-col">
               ${renderProfileSidebar(c)}
-              <a href="#/creator" class="creator-back-link">
+              <a href="/creator" class="creator-back-link">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                 All customizers
               </a>
@@ -742,7 +742,7 @@ function renderActiveFilters(filters) {
 
 function renderListItem(c) {
   return `
-    <a href="#/creator/${c.id}" class="creator-list-card" data-list-item="${c.id}">
+    <a href="/creator/${c.id}" class="creator-list-card" data-list-item="${c.id}">
       <div class="creator-list-avatar">${avatarImg(c, 52, "creator-list")}</div>
       <div class="creator-list-info">
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
@@ -863,7 +863,7 @@ export function renderCreator(ctx) {
         <div class="container" style="text-align:center;padding:80px 0">
           <h2 style="font-family:var(--font-heading);font-size:28px;margin-bottom:12px">Customizer not found</h2>
           <p style="color:var(--text-secondary);margin-bottom:24px">This professional isn't on the platform yet.</p>
-           <a href="#/creator" class="cfg-btn cfg-btn-primary">Browse customizers</a>
+           <a href="/creator" class="cfg-btn cfg-btn-primary">Browse customizers</a>
         </div>
       </div>`;
   }

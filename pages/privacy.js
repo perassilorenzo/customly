@@ -89,7 +89,7 @@ export function renderPrivacy() {
           <p style="font-size:14px;color:var(--text-secondary);line-height:1.7">Customly si riserva il diritto di aggiornare la presente Privacy Policy in qualsiasi momento.<br><br>Le modifiche verranno pubblicate su questa pagina e, per modifiche sostanziali, gli utenti verranno informati tramite un avviso sulla piattaforma.<br><br>Si invita l'utente a consultare periodicamente questa pagina per verificare eventuali aggiornamenti.</p>
         </section>
 
-        <a href="#/" class="cfg-btn cfg-btn-primary" style="display:inline-flex">← Indietro</a>
+        <a href="/" class="cfg-btn cfg-btn-primary" style="display:inline-flex">← Indietro</a>
       </div>
     </div>`;
 }

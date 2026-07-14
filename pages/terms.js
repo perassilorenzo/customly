@@ -66,7 +66,7 @@ export function renderTerms() {
           <p style="font-size:14px;color:var(--text-secondary);line-height:1.7">Inviando una richiesta tramite Customly, il cliente dichiara di aver letto e accettato questi termini e autorizza il trattamento dei dati necessari alla gestione della richiesta secondo la Privacy Policy della piattaforma.</p>
         </section>
 
-        <a href="#/" class="cfg-btn cfg-btn-primary" style="display:inline-flex">← Indietro</a>
+        <a href="/" class="cfg-btn cfg-btn-primary" style="display:inline-flex">← Indietro</a>
       </div>
     </div>`;
 }
