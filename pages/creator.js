@@ -614,6 +614,8 @@ function renderList() {
   const all = getAllCustomizers();
   const opts = collectFilterOptions(all);
   const n = countActive(_listState.filters);
+  _fromConfigure =
+    new URLSearchParams(window.location.search).get("from") === "configure";
   return `
     <div class="page">
       <div class="container">
@@ -741,8 +743,11 @@ function renderActiveFilters(filters) {
 }
 
 function renderListItem(c) {
+  const href = _fromConfigure
+    ? `/configuratore?creator=${c.id}`
+    : `/customizers/${c.id}`;
   return `
-    <a href="/configuratore?creator=${c.id}" class="creator-list-card" data-list-item="${c.id}">
+    <a href="${href}" class="creator-list-card" data-list-item="${c.id}">
       <div class="creator-list-avatar">${avatarImg(c, 52, "creator-list")}</div>
       <div class="creator-list-info">
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
@@ -810,6 +815,7 @@ let _listState = {
   filters: { styles: [], garments: [], techniques: [], locations: [] },
 };
 let _filterOpts = null;
+let _fromConfigure = false;
 let bound = false;
 
 function applyListFilter() {
