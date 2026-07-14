@@ -13,21 +13,29 @@ Customly è una **single-page application (SPA)** per la personalizzazione di ab
 
 **Come funziona**:
 
-- L'utente naviga tra le pagine via URL con hash (`#/creator`, `#/configuratore`)
-- Il router intercetta i cambiamenti di hash, carica la pagina giusta e la inserisce nel DOM
+- L'utente naviga tra le pagine via URL puliti (`/creator`, `/configuratore`)
+- Il router intercetta i cambiamenti di URL via History API (`pushState`), carica la pagina giusta e la inserisce nel DOM
+- Per il deploy su GitHub Pages, un file `404.html` gestisce il redirect delle URL dirette
 - Ogni pagina è un modulo JavaScript che esporta due funzioni: `render*(ctx)` per generare l'HTML e `init*(ctx)` per attaccare gli eventi
-- I dati dei customizer e dei venditori (sellers) vivono in file JavaScript separati, importati come moduli
+- I dati dei customizer vivono in file JavaScript separati, importati come moduli
+- I meta tag (title, description, Open Graph, canonical) si aggiornano dinamicamente per ogni pagina
+- I dati strutturati JSON-LD vengono iniettati automaticamente per SEO e GEO
 
 **Parti del progetto**:
 | Parte | Ruolo |
 |---|---|
 | `index.html` | Shell minima — carica il router e registra le route |
-| `utils/router.js` | Sistema di routing hash-based |
+| `404.html` | Redirect trick per GitHub Pages SPA routing |
+| `robots.txt` | Regole crawling per motori di ricerca |
+| `sitemap.xml` | Sitemap XML per SEO |
+| `llms.txt` | Informazioni leggibili da motori AI (GEO) |
+| `utils/router.js` | Sistema di routing basato su History API |
+| `utils/seo.js` | Gestione meta tag dinamici per pagina |
+| `utils/jsonld.js` | Iniezione JSON-LD structured data |
 | `pages/*.js` | Pagine dell'applicazione (home, configuratore, creator, contatti, venditori) |
 | `components/*.js` | Componenti UI riutilizzabili (navbar, footer) |
-| `data/*.js` | Dati e registry (customizer, sellers, prodotti, colori) |
+| `data/*.js` | Dati e registry (customizer, prodotti, colori) |
 | `customizers/*/data.js` | Profili dei customizer |
-| `sellers/*/data.js` | Dati dei venditori con prodotti e opzioni |
 | `styles/main.css` | Tutti gli stili dell'applicazione |
 
 ---
@@ -38,6 +46,10 @@ Customly è una **single-page application (SPA)** per la personalizzazione di ab
 customly/
 │
 ├── index.html                          # Entry point SPA
+├── 404.html                            # GitHub Pages SPA redirect trick
+├── robots.txt                          # Regole crawling motori di ricerca
+├── sitemap.xml                         # Sitemap XML per SEO
+├── llms.txt                            # Info leggibili da AI (GEO)
 ├── README.md                           # Documentazione del progetto
 ├── .gitignore                          # File ignorati da Git
 │
@@ -102,7 +114,9 @@ customly/
 │
 └── utils/                              # Utility generiche
     ├── formspree.js                    # Client API Formspree
-    ├── router.js                       # Router hash-based
+    ├── router.js                       # Router basato su History API (pushState)
+    ├── seo.js                          # Gestione meta tag dinamici per pagina
+    ├── jsonld.js                       # Iniezione JSON-LD structured data
     └── store.js                        # (Legacy) Store reattivo minimale
 ```
 
