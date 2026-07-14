@@ -2,7 +2,7 @@
   "name": "customly",
   "private": true,
   "scripts": {
-    "dev": "serve ."
+    "dev": "serve -s ."
   },
   "devDependencies": {
     "serve": "^14.2.4"
