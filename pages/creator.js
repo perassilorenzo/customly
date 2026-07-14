@@ -34,7 +34,7 @@ function isMov(src) {
 
 function renderHero(c) {
   const coverContent = c.cover
-    ? `<img src="${c.cover}" alt="">`
+    ? `<img src="${c.cover}" alt="Copertina profilo di ${esc(c.name)}" loading="eager">`
     : `<div class="creator-cover-placeholder"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>`;
   return `
     <div class="creator-hero">
@@ -110,7 +110,7 @@ function renderAvailableForCustomization(c) {
             (a) => `
           <div class="creator-catalog-item">
             <div class="creator-catalog-image">
-              ${a.image ? `<img src="${a.image}" alt="${esc(a.item)}">` : "&#9670;"}
+              ${a.image ? `<img src="${a.image}" alt="${esc(a.item)}" loading="lazy">` : "&#9670;"}
             </div>
             <div class="creator-catalog-body">
               <h4>${esc(a.item)}</h4>
@@ -137,7 +137,7 @@ function renderProducts(c) {
             return `
           <div class="creator-product-card" data-product-id="${p.id}" data-customizer-id="${c.id}">
             <div class="creator-product-image">
-              ${p.image ? `<img src="${p.image}" alt="${esc(p.name)}">` : "&#9670;"}
+              ${p.image ? `<img src="${p.image}" alt="${esc(p.name)}" loading="lazy">` : "&#9670;"}
             </div>
             <div class="creator-product-body">
               <div class="creator-product-header">
@@ -389,7 +389,7 @@ function renderPortfolio(c) {
             (p, i) => `
           <div class="creator-portfolio-item" data-portfolio-gallery="${i}">
             <div class="creator-portfolio-image">
-              ${p.images && p.images.length ? `<img src="${p.images[0]}" alt="${esc(p.title)}">` : "&#9632;"}
+              ${p.images && p.images.length ? `<img src="${p.images[0]}" alt="${esc(p.title)}" loading="lazy">` : "&#9632;"}
             </div>
             <div class="creator-portfolio-body">
               <h4>${p.link ? `<a href="${esc(p.link)}" target="_blank" rel="noopener">${esc(p.title)}</a>` : esc(p.title)}</h4>
@@ -411,7 +411,7 @@ function renderPortfolio(c) {
             (p) => `
           <div class="creator-portfolio-item creator-portfolio-item--sold" data-portfolio-sold="${p.id}" data-customizer-id="${c.id}">
             <div class="creator-portfolio-image">
-              ${p.image ? `<img src="${p.image}" alt="${esc(p.name)}">` : "&#9632;"}
+              ${p.image ? `<img src="${p.image}" alt="${esc(p.name)}" loading="lazy">` : "&#9632;"}
               <span class="creator-sold-badge">Venduto</span>
             </div>
             <div class="creator-portfolio-body">
