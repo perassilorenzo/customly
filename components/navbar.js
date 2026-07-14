@@ -13,10 +13,7 @@ export function renderNav() {
     { href: "/contatti", label: "Contatti" },
   ];
   const path = getPath();
-  const dark =
-    localStorage.getItem("theme") === "dark" ||
-    (!localStorage.getItem("theme") &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches);
+  const dark = localStorage.getItem("theme") === "dark";
   return `
 <nav aria-label="Navigazione principale">
   <div class="container">
@@ -69,9 +66,7 @@ export function reinitNav() {
 
 function applySavedTheme() {
   const saved = localStorage.getItem("theme");
-  const dark =
-    saved === "dark" ||
-    (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  const dark = saved === "dark";
   document.documentElement.classList.toggle("dark-mode", dark);
   syncBtn();
 }
