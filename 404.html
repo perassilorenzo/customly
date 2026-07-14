@@ -4,9 +4,18 @@
     <meta charset="UTF-8" />
     <title>Reindirizzamento...</title>
     <script>
-      // GitHub Pages SPA redirect: stores path in query param and redirects to same directory
+      // GitHub Pages SPA redirect: stores path in query param, redirects to same directory
       var l = window.location;
-      l.replace("?p=" + encodeURIComponent(l.pathname + l.search + l.hash));
+      // Only encode pathname — never include search/hash to prevent recursive encoding
+      var p = l.pathname;
+      // Prevent loop: if we already have ?p= with this same path, stop
+      var qs = new URLSearchParams(l.search);
+      if (qs.get("p") === p) {
+        // Already redirected, just clean up
+        l.replace(p);
+      } else {
+        l.replace("?p=" + encodeURIComponent(p));
+      }
     </script>
   </head>
   <body></body>
