@@ -76,9 +76,12 @@ export function navigate(path) {
 }
 
 export function getPath() {
-  const raw = window.location.pathname;
+  let raw = window.location.pathname;
   if (BASE_PATH && raw.startsWith(BASE_PATH)) {
-    return raw.slice(BASE_PATH.length) || "/";
+    raw = raw.slice(BASE_PATH.length) || "/";
+  }
+  if (raw !== "/" && raw.endsWith("/")) {
+    raw = raw.slice(0, -1);
   }
   return raw || "/";
 }
