@@ -4721,7 +4721,7 @@ html.dark-mode .cfg-search-bar input::placeholder {
 
 /* ---- Waitlist ---- */
 .waitlist-full {
-  padding: 40px 0;
+  padding: 20px 0;
   border-top: 1px solid var(--border);
 }
 .waitlist {
@@ -4730,7 +4730,7 @@ html.dark-mode .cfg-search-bar input::placeholder {
 }
 .waitlist-hero {
   text-align: center;
-  padding: 60px 0 40px;
+  padding: 30px 0 40px;
 }
 .waitlist-hero h2 {
   font-family: var(--font-heading);
