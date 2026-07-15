@@ -13,7 +13,6 @@ export function renderHome() {
       <p>Trova un customizer italiano, configura un capo personalizzato e trasforma la tua idea in qualcosa di concreto. Custom fashion, streetwear su misura e capi unici — tutto in un unico posto.</p>
       <div class="hero-btns">
         <button class="btn btn-primary" data-nav-creator>Scopri i customizer</button>
-        <button class="btn btn-secondary" data-nav-config>Prova il configuratore</button>
         <button class="btn btn-secondary" data-nav-how>Come funziona</button>
       </div>
     </div>
@@ -83,53 +82,6 @@ export function renderHome() {
           <div class="step-content">
             <h3>Invia e collabora</h3>
             <p>Invia il progetto al customizer e definisci insieme la realizzazione. Zero fraintendimenti.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="section-header">
-        <span class="label">Configuratore</span>
-        <h2>Dai forma alla tua idea</h2>
-      </div>
-      <div class="mockup" style="max-width:800px;margin:0 auto">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">
-          <div>
-            <div style="font-family:var(--font-heading);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--text-secondary);margin-bottom:12px">Prodotto</div>
-            <div style="display:flex;gap:6px;margin-bottom:24px">
-              <div style="flex:1;padding:8px;border:2px solid var(--accent);text-align:center;font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.04em;background:var(--accent);color:var(--bg)">Maglia</div>
-              <div style="flex:1;padding:8px;border:1px solid var(--border);text-align:center;font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-secondary)">Pantaloni</div>
-            </div>
-            <div style="font-family:var(--font-heading);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--text-secondary);margin-bottom:8px">Modello</div>
-            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px">
-              <span style="padding:6px 14px;border:1px solid var(--border);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em">Maniche corte</span>
-              <span style="padding:6px 14px;border:1px solid var(--accent);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;background:var(--accent);color:var(--bg)">Maniche lunghe</span>
-              <span style="padding:6px 14px;border:1px solid var(--border);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em">Senza maniche</span>
-            </div>
-            <div style="font-family:var(--font-heading);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--text-secondary);margin-bottom:8px">Dettagli</div>
-            <div style="display:flex;flex-wrap:wrap;gap:6px">
-              <span style="padding:6px 14px;border:1px solid var(--accent);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;background:var(--accent);color:var(--bg)">Stampe</span>
-              <span style="padding:6px 14px;border:1px solid var(--border);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em">Patch</span>
-              <span style="padding:6px 14px;border:1px solid var(--border);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em">Ricami</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;padding-top:16px;margin-top:20px;border-top:2px solid var(--text);margin-bottom:16px">
-              <span style="color:var(--text-secondary);font-size:14px">Totale</span>
-              <span style="font-size:22px;font-weight:700;font-family:var(--font-heading);color:var(--accent)">€13.00</span>
-            </div>
-          </div>
-          <div style="border:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;padding:40px">
-            <svg viewBox="0 0 200 260" width="150" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M57,42 L143,42 L153,72 Q155,80 145,87 L140,175 Q148,190 105,190 Q62,190 60,175 L55,87 Q45,80 47,72 Z" fill="#c13535" stroke="#a32d2d" stroke-width="1.5"/>
-              <path d="M57,44 Q100,36 143,44" stroke="#a32d2d" stroke-width="1.5" fill="none"/>
-              <path d="M47,72 Q27,77 22,108 L52,103 Z" fill="#c13535" stroke="#a32d2d" stroke-width="1.5"/>
-              <path d="M153,72 Q173,77 178,108 L148,103 Z" fill="#c13535" stroke="#a32d2d" stroke-width="1.5"/>
-              <rect x="85" y="95" width="30" height="40" rx="2" fill="#d94c4c" opacity="0.6"/>
-              <text x="100" y="118" text-anchor="middle" fill="#c13535" font-size="8" font-weight="600">LOGO</text>
-              <text x="100" y="55" text-anchor="middle" fill="#a32d2d" font-size="6" font-style="italic" opacity="0.7">&#10022; nome</text>
-            </svg>
           </div>
         </div>
       </div>
@@ -261,9 +213,6 @@ export function renderHome() {
 }
 
 export function initHome() {
-  document
-    .querySelector("[data-nav-config]")
-    ?.addEventListener("click", () => navigate("/configuratore"));
   document
     .querySelector("[data-nav-creator]")
     ?.addEventListener("click", () => navigate("/customizers"));
