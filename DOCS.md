@@ -490,9 +490,8 @@ initNav(); // attacca eventi navbar
 1. **Hero**: schermo intero, frase "Your vision. Your style. Make it yours.", 3 bottoni
 2. **Il problema**: 5 punti elenco, 2 card (per chi compra / per chi crea)
 3. **La soluzione**: timeline animata a 4 step
-4. **Anteprima**: mockup statico del configuratore con SVG
-5. **La visione**: 4 card sulla visione del progetto
-6. **About + Roadmap**: chi ha creato Customly, roadmap in 3 tappe
+4. **La visione**: 4 card sulla visione del progetto
+5. **About + Roadmap**: chi ha creato Customly, roadmap in 3 tappe
 
 ---
 
