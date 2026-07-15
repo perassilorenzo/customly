@@ -89,35 +89,7 @@ export function renderHome() {
     </div>
   </section>
 
-  <section class="section" style="background:var(--bg-alt)">
-    <div class="container">
-      <div class="section-header">
-        <span class="label">Perch&egrave; Customly</span>
-        <h2>Costruito per chi crea e per chi sogna</h2>
-        <p>Ogni funzionalit&agrave; &egrave; pensata per rendere il processo di personalizzazione pi&ugrave; semplice, professionale e diretto.</p>
-      </div>
-      <div class="vision-grid">
-        <div class="vision-item">
-          <h4>Trova il professionista giusto</h4>
-          <p>Filtra per stile, specializzazione e zona. Contatta direttamente chi pu&ograve; dare forma alla tua idea di abbigliamento personalizzato.</p>
-        </div>
-        <div class="vision-item">
-          <h4>Configura visivamente il progetto</h4>
-          <p>Seleziona modello, dettagli e modifiche in modo visivo e immediato. Il customizer riceve tutto ci&ograve; che serve per iniziare.</p>
-        </div>
-        <div class="vision-item">
-          <h4>Profili professionali</h4>
-          <p>Ogni customizer ha un profilo con i propri lavori, servizi e stile. Una vetrina professionale sempre accessibile.</p>
-        </div>
-        <div class="vision-item">
-          <h4>Una community in crescita</h4>
-          <p>Scopri nuovi talenti della custom fashion, condividi ispirazioni e costruisci una rete di professionisti e appassionati di capi unici.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="faq">
+  <section class="section" id="faq" style="background:var(--bg-alt)">
     <div class="container">
       <div class="section-header">
         <span class="label">Domande frequenti</span>
@@ -168,6 +140,34 @@ export function renderHome() {
           <div class="faq-answer">
             <p>Ogni customizer dispone di un profilo con stile, competenze, portfolio e lavori realizzati. Puoi cercare per nome, citt&agrave;, stile o tecnica e confrontare i profili prima di scegliere il professionista giusto per il tuo progetto di personalizzazione vestiti.</p>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="label">Perch&egrave; Customly</span>
+        <h2>Costruito per chi crea e per chi sogna</h2>
+        <p>Ogni funzionalit&agrave; &egrave; pensata per rendere il processo di personalizzazione pi&ugrave; semplice, professionale e diretto.</p>
+      </div>
+      <div class="vision-grid">
+        <div class="vision-item">
+          <h4>Trova il professionista giusto</h4>
+          <p>Filtra per stile, specializzazione e zona. Contatta direttamente chi pu&ograve; dare forma alla tua idea di abbigliamento personalizzato.</p>
+        </div>
+        <div class="vision-item">
+          <h4>Configura visivamente il progetto</h4>
+          <p>Seleziona modello, dettagli e modifiche in modo visivo e immediato. Il customizer riceve tutto ci&ograve; che serve per iniziare.</p>
+        </div>
+        <div class="vision-item">
+          <h4>Profili professionali</h4>
+          <p>Ogni customizer ha un profilo con i propri lavori, servizi e stile. Una vetrina professionale sempre accessibile.</p>
+        </div>
+        <div class="vision-item">
+          <h4>Una community in crescita</h4>
+          <p>Scopri nuovi talenti della custom fashion, condividi ispirazioni e costruisci una rete di professionisti e appassionati di capi unici.</p>
         </div>
       </div>
     </div>
