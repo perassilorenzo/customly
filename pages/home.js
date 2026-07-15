@@ -175,7 +175,7 @@ export function renderHome() {
 
   <div class="container">
     <div class="about-inline">
-      <div>
+      <div class="about-developer">
         <h3>Ideato e sviluppato da Lorenzo Perassi</h3>
         <p>Studente di Informatica, sviluppatore e customizer con la passione per tecnologia, moda e customizzazione. Customly nasce dall'unione tra mondo digitale e artigianato per creare strumenti che aiutano le persone a dare forma alle proprie idee.</p>
         <div class="about-social">
@@ -190,7 +190,7 @@ export function renderHome() {
           </div>
         </div>
       </div>
-      <div>
+      <div class="about-roadmap">
         <h3>Roadmap</h3>
         <div class="roadmap">
           <div class="roadmap-item">
