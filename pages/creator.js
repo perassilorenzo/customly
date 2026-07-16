@@ -845,10 +845,10 @@ function renderList() {
           <h2>Discover customizers</h2>
           <p>Find your customizer and start creating something unique.</p>
         </div>
-        <div class="creator-list-search">
-          <input class="creator-list-search-input" data-search-input type="text" placeholder="Cerca un customizer per nome, citt&agrave;, stile o competenza..." autocomplete="off">
-        </div>
-        <div class="creator-list-toolbar">
+        <div class="creator-list-search-row">
+          <div class="creator-list-search">
+            <input class="creator-list-search-input" data-search-input type="text" placeholder="Cerca un customizer per nome, citt&agrave;, stile o competenza..." autocomplete="off">
+          </div>
           <button class="creator-filter-toggle" data-toggle-filters>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
             Filters${n ? ` (${n})` : ""}
@@ -1063,7 +1063,7 @@ function applyListFilter() {
   if (empty) empty.style.display = filtered.length ? "none" : "block";
 
   /* update toolbar + active chips */
-  const toolbar = document.querySelector(".creator-list-toolbar");
+  const toolbar = document.querySelector(".creator-list-search-row");
   const activeEl = document.querySelector(".creator-active-filters");
   const n = countActive(_listState.filters);
   if (toolbar) {
@@ -1455,6 +1455,35 @@ export function initCreator() {
       document.querySelector("[data-thankyou-modal]")?.remove();
       return;
     }
+
+    /* FAQ accordion (delegated — works after re-render) */
+    const faqBtn = e.target.closest(
+      ".faq-item[data-faq] .faq-question, .faq-item[data-faq-waitlist] .faq-question",
+    );
+    if (faqBtn) {
+      const expanded = faqBtn.getAttribute("aria-expanded") === "true";
+      const item = faqBtn.closest(".faq-item");
+      document.querySelectorAll(".faq-item.open").forEach((openItem) => {
+        if (openItem !== item) {
+          openItem.classList.remove("open");
+          openItem
+            .querySelector(".faq-question")
+            ?.setAttribute("aria-expanded", "false");
+        }
+      });
+      faqBtn.setAttribute("aria-expanded", String(!expanded));
+      item?.classList.toggle("open");
+    }
+
+    /* How-cards accordion (delegated — works after re-render) */
+    const howCard = e.target.closest(".waitlist-how-card");
+    if (howCard) {
+      const wasOpen = howCard.classList.contains("open");
+      document
+        .querySelectorAll(".waitlist-how-card.open")
+        .forEach((c) => c.classList.remove("open"));
+      if (!wasOpen) howCard.classList.add("open");
+    }
   });
 
   /* Keyboard navigation for galleries and modals */
@@ -1628,47 +1657,12 @@ export function initCreator() {
     }
   });
 
-  /* List page: search */
-  const searchInput = document.querySelector("[data-search-input]");
-  if (searchInput) {
-    searchInput.addEventListener("input", () => {
-      _listState.query = searchInput.value;
+  /* List page: search (delegated — survives re-render) */
+  document.addEventListener("input", (e) => {
+    if (e.target.matches("[data-search-input]")) {
+      _listState.query = e.target.value;
       applyListFilter();
-    });
-  }
-
-  /* FAQ accordion */
-  document
-    .querySelectorAll(
-      ".faq-item[data-faq] .faq-question, .faq-item[data-faq-waitlist] .faq-question",
-    )
-    .forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const expanded = btn.getAttribute("aria-expanded") === "true";
-        const item = btn.closest(".faq-item");
-        /* Close all other FAQ items */
-        document.querySelectorAll(".faq-item.open").forEach((openItem) => {
-          if (openItem !== item) {
-            openItem.classList.remove("open");
-            openItem
-              .querySelector(".faq-question")
-              ?.setAttribute("aria-expanded", "false");
-          }
-        });
-        btn.setAttribute("aria-expanded", String(!expanded));
-        item?.classList.toggle("open");
-      });
-    });
-
-  /* How-cards accordion (mobile) */
-  document.querySelectorAll(".waitlist-how-card").forEach((card) => {
-    card.addEventListener("click", () => {
-      const wasOpen = card.classList.contains("open");
-      document
-        .querySelectorAll(".waitlist-how-card.open")
-        .forEach((c) => c.classList.remove("open"));
-      if (!wasOpen) card.classList.add("open");
-    });
+    }
   });
 
   /* Waitlist popups */

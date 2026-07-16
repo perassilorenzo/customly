@@ -3350,8 +3350,15 @@ footer a:hover {
 /* ==================== ENHANCED CREATOR LIST ==================== */
 
 /* --- Search --- */
-.creator-list-search {
+.creator-list-search-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin-bottom: 24px;
+}
+.creator-list-search {
+  flex: 1;
+  min-width: 0;
 }
 .creator-list-search-input {
   width: 100%;
@@ -3499,13 +3506,6 @@ footer a:hover {
 }
 
 /* ==================== FILTER TOOLBAR ==================== */
-
-.creator-list-toolbar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-}
 
 .creator-filter-toggle {
   display: inline-flex;
@@ -4799,10 +4799,10 @@ html.dark-mode .cfg-search-bar input::placeholder {
 
 /* ---- Waitlist ---- */
 .waitlist-full {
-  padding: 10px 0;
+  padding: 0;
 }
 .customizer-cta {
-  padding: 10px 0 0;
+  padding: 0;
 }
 .customizer-cta-inner {
   text-align: center;
@@ -5243,10 +5243,9 @@ html.dark-mode .cfg-search-bar input::placeholder {
     text-align: center;
   }
 
-  /* Filters inline with search */
-  .creator-list-toolbar {
-    margin-top: -16px;
-    margin-bottom: 16px;
+  /* Search row: stack on mobile */
+  .creator-list-search-row {
+    flex-wrap: wrap;
   }
 
   /* Card customizer: centered, narrower */
