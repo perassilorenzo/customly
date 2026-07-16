@@ -517,7 +517,7 @@ afterRender(() => {
 | Funzione | Scopo |
 |---|---|
 | `renderCreator(ctx)` | Handler route: se ctx.id è presente mostra profilo, altrimenti lista |
-| `initCreator()` | Attacca evento al pulsante "Start customizing" |
+| `initCreator()` | Attacca event delegation globali (click, input, submit, keydown) per profilo, lista, FAQ accordion, how-cards accordion, modali, galerie, ricerca |
 
 **Funzioni interne**:
 | Funzione | Scopo |
@@ -1210,7 +1210,7 @@ Le sezioni sono in ordine di apparizione nel layout:
 
 Breakpoint usati:
 
-- **768px**: Nav → hamburger animato (span → X), footer 1 colonna, timeline single-column, about-inline inverte ordine (roadmap prima), social tags orizzontali, card customizer centrata e singola colonna, waitlist how-cards accordion, contact channels no-link, filters inline con search
+- **768px**: Nav → hamburger animato (span → X), footer 1 colonna, timeline single-column, about-inline inverte ordine (roadmap prima), social tags orizzontali, card customizer centrata e singola colonna, waitlist how-cards accordion, contact channels no-link, search row si impila (search + filters su righe separate)
 - **900px**: Configuratore → layout singola colonna
 - **960px**: Configuratore v2 → singola colonna
 - **1024px**: Timeline card più strette
@@ -1446,7 +1446,7 @@ Tutto in `styles/main.css`. Segui le variabili CSS esistenti e la sezione giusta
 | **Query string**          | Parametri dopo `?` nell'URL                                        | `?creator=perassilorenzo` → `getParams().creator`             |
 | **Stato**                 | Dati che cambiano durante l'interazione utente                     | Variabile `s` in configuratore.js                             |
 | **Macchina a stati**      | Pattern dove lo stato determina cosa mostrare                      | `s.step` → "start", "garment", "customize", "review", "done"  |
-| **Event delegation**      | Un solo listener sull'elemento padre che gestisce eventi dei figli | `listen()` in configuratore.js su `#configuratore-root`       |
+| **Event delegation**      | Un solo listener sull'elemento padre che gestisce eventi dei figli | `listen()` in configuratore.js su `#configuratore-root`; FAQ/how-cards/search in creator.js su `document` |
 | **Registry**              | Oggetto che tiene traccia di entità (customizer, sellers)          | `data/customizers.js`, `data/sellers.js`                      |
 | **Module**                | File JS con `import`/`export`                                      | Tutti i file nel progetto                                     |
 | **Template literal**      | Stringa JS con `${variabile}` per interpolare valori               | `` `<h1>${name}</h1>` ``                                      |
