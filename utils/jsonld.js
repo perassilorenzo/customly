@@ -2,8 +2,29 @@ import { getCustomizer, getAllCustomizers } from "../data/customizers.js";
 
 const SITE = "https://customly.it";
 
-const jsonLd = {
-  "/": [
+function buildItemList(all) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Customizer italiani — Customly",
+    description:
+      "Directory dei customizer italiani per abbigliamento personalizzato.",
+    url: SITE + "/customizers",
+    numberOfItems: all.length,
+    itemListElement: all.map((c, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: SITE + "/customizers/" + c.id,
+      name: c.name,
+      description: c.tagline,
+    })),
+  };
+}
+
+function getJsonLd(path) {
+  const all = getAllCustomizers();
+
+  const home = [
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
@@ -178,22 +199,7 @@ const jsonLd = {
         },
       ],
     },
-    {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      name: "Customizer italiani — Customly",
-      description:
-        "Directory dei customizer italiani per abbigliamento personalizzato.",
-      url: SITE + "/customizers",
-      numberOfItems: getAllCustomizers().length,
-      itemListElement: getAllCustomizers().map((c, i) => ({
-        "@type": "ListItem",
-        position: i + 1,
-        url: SITE + "/customizers/" + c.id,
-        name: c.name,
-        description: c.tagline,
-      })),
-    },
+    buildItemList(all),
     {
       "@context": "https://schema.org",
       "@type": "HowTo",
@@ -226,9 +232,9 @@ const jsonLd = {
       ],
       totalTime: "P7D",
     },
-  ],
+  ];
 
-  "/customizers": [
+  const customizers = [
     {
       "@context": "https://schema.org",
       "@type": "CollectionPage",
@@ -238,8 +244,8 @@ const jsonLd = {
       url: SITE + "/customizers",
       mainEntity: {
         "@type": "ItemList",
-        numberOfItems: getAllCustomizers().length,
-        itemListElement: getAllCustomizers().map((c, i) => ({
+        numberOfItems: all.length,
+        itemListElement: all.map((c, i) => ({
           "@type": "ListItem",
           position: i + 1,
           url: SITE + "/customizers/" + c.id,
@@ -267,8 +273,11 @@ const jsonLd = {
         },
       ],
     },
-  ],
-};
+  ];
+
+  const routes = { "/": home, "/customizers": customizers };
+  return routes[path] || [];
+}
 
 function getCreatorJsonLd(id) {
   const c = getCustomizer(id);
@@ -491,10 +500,12 @@ function getCreatorJsonLd(id) {
 export function applyJsonLd(path) {
   document.querySelectorAll("script[data-jsonld]").forEach((s) => s.remove());
 
-  let schemas = jsonLd[path] || [];
+  let schemas;
   if (path.startsWith("/customizers/")) {
     const id = path.split("/customizers/")[1];
-    if (id) schemas = getCreatorJsonLd(id);
+    schemas = id ? getCreatorJsonLd(id) : [];
+  } else {
+    schemas = getJsonLd(path);
   }
 
   schemas.forEach((schema) => {
