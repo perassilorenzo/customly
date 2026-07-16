@@ -142,7 +142,7 @@ export const customizer = {
         "Collaborazione creativa di fashion design e sartoria. Design, prototipazione e creazione delle camicie per gli investitori di CRYBU S.R.L.",
       images: ["customizers/perassilorenzo/images/crybu-design.png"],
       techniques: ["Fashion Design", "Prototipazione", "Produzione Sartoriale"],
-      link: "https://crybu.it",
+      link: "https://crybu.io",
     },
   ],
   process: [
