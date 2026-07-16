@@ -110,7 +110,7 @@ customly/
 │       └── immagini/.gitkeep
 │
 ├── styles/
-│   └── main.css                        # Tutti gli stili (2391 righe)
+│   └── main.css                        # Tutti gli stili (5334 righe)
 │
 └── utils/                              # Utility generiche
     ├── formspree.js                    # Client API Formspree
@@ -147,7 +147,7 @@ customly/
 ### CSS
 
 **Cos'è**: Linguaggio per lo stile delle pagine web.
-**Dove**: Unico file `styles/main.css` (2391 righe).
+**Dove**: Unico file `styles/main.css` (5334 righe).
 **Perché**: Design system coeso con variabili CSS personalizzate. Nessun framework CSS — tutto scritto a mano.
 **Cosa permette**: Palette colori coerente, layout responsive (mobile/tablet/desktop), animazioni (timeline, hover card, fade-in step), pattern di sfondo con linee verticali.
 
@@ -434,6 +434,87 @@ afterRender(() => {
 | `onChange(fn)` | Iscrive un listener ai cambiamenti |
 
 **Nota**: Questo file **non è utilizzato** da nessuna pagina al momento. È un'utility legacy.
+
+---
+
+## 6.4.1 `utils/seo.js`
+
+**Scopo**: Gestione dinamica di tutti i meta tag SEO per ogni pagina dell'SPA. Aggiorna title, description, Open Graph, Twitter Cards, canonical, geo tags e keywords ad ogni cambio route.
+
+**Esporta**:
+| Funzione | Scopo |
+|---|---|
+| `applySeo(path)` | Aggiorna tutti i meta tag in base al path corrente |
+
+**Meta tag gestiti per ogni pagina**:
+
+| Tag                                 | Descrizione                                              |
+| ----------------------------------- | -------------------------------------------------------- |
+| `<title>`                           | Titolo della pagina (aggiornato dinamicamente)           |
+| `<meta name="description">`         | Descrizione per i motori di ricerca                      |
+| `<meta name="keywords">`            | Parole chiave per SEO                                    |
+| `<meta name="author">`              | Autore del contenuto                                     |
+| `<meta name="robots">`              | `index, follow, max-snippet:-1, max-image-preview:large` |
+| `<meta name="geo.region">`          | Regione geografica (Piemonte)                            |
+| `<meta name="geo.placename">`       | Città (per profili customizer)                           |
+| `<meta name="geo.position">`        | Coordinata lat;lng                                       |
+| `<meta property="og:title">`        | Titolo Open Graph                                        |
+| `<meta property="og:description">`  | Descrizione Open Graph                                   |
+| `<meta property="og:url">`          | URL canonico                                             |
+| `<meta property="og:type">`         | Tipo (website/profile)                                   |
+| `<meta property="og:image">`        | Immagine di anteprima                                    |
+| `<meta property="og:image:width">`  | Larghezza immagine (1200)                                |
+| `<meta property="og:image:height">` | Altezza immagine (630)                                   |
+| `<meta property="og:locale">`       | Lingua (it_IT)                                           |
+| `<meta property="og:site_name">`    | Nome del sito                                            |
+| `<meta name="twitter:card">`        | Tipo card (summary_large_image)                          |
+| `<meta name="twitter:site">`        | Account Twitter sito                                     |
+| `<meta name="twitter:creator">`     | Account Twitter creatore                                 |
+| `<meta name="twitter:title">`       | Titolo Twitter Card                                      |
+| `<meta name="twitter:description">` | Descrizione Twitter Card                                 |
+| `<meta name="twitter:image">`       | Immagine Twitter Card                                    |
+| `<link rel="canonical">`            | URL canonico                                             |
+
+**Meta geo per customizer**: Quando si visita un profilo `/customizers/:id`, i tag geo vengono impostati automaticamente con città, regione e paese del customizer.
+
+**Implementazione**: La funzione `setTag()` cerca un meta tag esistente per nome/property prima di crearne uno nuovo, evitando duplicati.
+
+---
+
+## 6.4.2 `utils/jsonld.js`
+
+**Scopo**: Iniezione automatica di dati strutturati JSON-LD nel `<head>` per ogni pagina. I dati strutturati aiutano Google a generare rich snippet (FAQ, breadcrumbs, valutazioni, prodotti, ecc.).
+
+**Esporta**:
+| Funzione | Scopo |
+|---|---|
+| `applyJsonLd(path)` | Rimuove i vecchi script JSON-LD e inietta quelli nuovi per il path corrente |
+
+**Schema per pagina**:
+
+| Pagina             | Tipi Schema.org                                                                                                                                       | Cosa produce nei risultati Google                                              |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `/` (home)         | `WebApplication`, `Organization`, `WebSite`, `FAQPage`, `BreadcrumbList`, `ItemList`, `HowTo`                                                         | Box FAQ, Knowledge Panel, App info, Breadcrumb, HowTo steps                    |
+| `/customizers`     | `CollectionPage`, `BreadcrumbList`                                                                                                                    | Directory customizer, Breadcrumb                                               |
+| `/customizers/:id` | `ProfilePage`, `Person`, `BreadcrumbList`, `ItemList` (servizi), `ItemList` (prodotti), `AggregateRating` + `Review`, `HowTo`, `ItemList` (portfolio) | Profilo, Breadcrumb, Servizi, Prodotti, Stelle/Recensioni, Processo lavorativo |
+
+**Dettagli per tipo**:
+
+- **`WebApplication`**: Nome, URL, categoria, descrizione, creatore con sameAs, offers, featureList, aggregateRating
+- **`Organization`**: Nome, logo, descrizione, founder, foundingDate, address, geo, contactPoint, sameAs (social links)
+- **`WebSite`**: Nome, URL, publisher, lingua, potentialAction (SearchAction per ricerca interna)
+- **`FAQPage`**: 7 domande/risposte sul funzionamento della piattaforma
+- **`BreadcrumbList`**: Gerarchia delle pagine (Home → Customizers → Profilo)
+- **`ItemList`** (customizers): Lista di tutti i customizer con URL e descrizione
+- **`HowTo`**: 4 step del processo di personalizzazione con totalTime stimato
+- **`ProfilePage` + `Person`**: Nome, bio, immagine, indirizzo, geo, skills, knowAbout, sameAs (social)
+- **`Service`**: Nome, descrizione, provider, areaServed, offers (prezzo)
+- **`Product`**: Nome, descrizione, immagine, offers con availability e seller
+- **`AggregateRating` + `Review`**: Valutazione media e singole recensioni con data, autore, testo, rating
+- **`HowTo`** (customizer): Processo creativo del singolo customizer (Idea → Consegna)
+- **`CreativeWork`** (portfolio): Ogni lavoro del portfolio con titolo, descrizione, immagine, keywords
+
+**Come funziona**: Alla change route, `applyJsonLd()` rimuove tutti gli `<script data-jsonld>` esistenti e ne crea di nuovi con `JSON.stringify(schema)`. I dati vengono letti dinamicamente dai file `customizers/*/data.js` tramite `getCustomizer()` e `getAllCustomizers()`.
 
 ---
 
@@ -785,7 +866,7 @@ Usato da `products.js` per generare ombre e dettagli del capo con tonalità liev
 
 ## 6.16 `styles/main.css`
 
-**Scopo**: Tutti gli stili dell'applicazione in un unico file (2391 righe).
+**Scopo**: Tutti gli stili dell'applicazione in un unico file (5334 righe).
 
 **Sezioni principali**:
 | Sezione | Righe | Cosa contiene |
@@ -1155,7 +1236,7 @@ Per aggiungere nuove **modifiche** nel configuratore:
 
 ### Struttura
 
-Un unico file: `styles/main.css` (2391 righe). Tutto in un file solo — nessun CSS modulare o framework.
+Un unico file: `styles/main.css` (5334 righe). Tutto in un file solo — nessun CSS modulare o framework.
 
 ### Organizzazione
 
@@ -1457,4 +1538,14 @@ Tutto in `styles/main.css`. Segui le variabili CSS esistenti e la sezione giusta
 | **Responsive**            | Il layout si adatta a schermi grandi e piccoli                     | Media query a 768px, 900px, 480px                             |
 | **IntersectionObserver**  | API browser per rilevare quando un elemento è visibile             | Animazione timeline in home.js                                |
 | **Design system**         | Insieme coerente di colori, font, spaziature                       | Variabili `:root` in main.css                                 |
+| **JSON-LD**               | Formato di dati strutturati per SEO (JavaScript Object Notation for Linked Data) | `utils/jsonld.js` inietta schema.org nel `<head>` |
+| **Schema.org**            | Vocabolario di tipi e proprietà per dati strutturati condivisi     | `WebApplication`, `Person`, `FAQPage`, `Product`              |
+| **Rich snippet**          | Risultati Google arricchiti (FAQ, stelle, breadcrumbs, ecc.)       | Box FAQ nella home, stelle nei profili customizer             |
+| **Open Graph**            | Protocollo per anteprime dei link su social (Facebook, LinkedIn)   | `og:title`, `og:description`, `og:image`                      |
+| **Twitter Card**          | Formato per anteprime dei link su Twitter/X                        | `twitter:card`, `twitter:title`, `twitter:image`              |
+| **Canonical URL**         | URL "ufficiale" di una pagina per evitare contenuti duplicati      | `<link rel="canonical">` in ogni pagina                       |
+| **GEO**                   | Ottimizzazione per ricerche geolocalizzate                         | `geo.position`, `geo.placename` nei meta tag                  |
+| **BreadcrumbList**        | Schema che mostra la gerarchia delle pagine                        | Home → Customizers → Lorenzo Perassi                          |
+| **AggregateRating**       | Valutazione media mostrata come stelle nei risultati Google        | 5.0 stelle nei profili con recensioni                         |
+| **SearchAction**          | Schema che abilita la ricerca interna nei risultati Google         | `potentialAction` in WebSite schema                          |
 ````
