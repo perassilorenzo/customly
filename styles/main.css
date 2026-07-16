@@ -4803,7 +4803,7 @@ html.dark-mode .cfg-search-bar input::placeholder {
   padding: 0;
 }
 .customizer-cta {
-  padding: 12px 0 0;
+  padding: 0;
 }
 .customizer-cta-inner {
   text-align: center;
