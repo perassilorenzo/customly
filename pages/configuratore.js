@@ -400,6 +400,7 @@ function render() {
         </div>`
             : ""
         }
+        <div class="cfg-progress" id="cfg-progress"></div>
         <div id="cfg-step-content"></div>
       </div>
       <div class="cfg-sidebar" id="cfg-sidebar"></div>
@@ -407,6 +408,7 @@ function render() {
     listen();
   }
 
+  updateProgress();
   renderStep();
   renderModal();
   updateSidebar();
@@ -430,6 +432,38 @@ function renderCurrentStep() {
   return "";
 }
 
+function getStepIdx() {
+  const st = s.step;
+  if (st === "start" || st === "no-garment") return 0;
+  if (st === "garment-category") return 1;
+  if (st === "garment-type" || st === "jeans-model") return 2;
+  if (st === "customize") return 3;
+  if (st === "review") return 4;
+  return -1;
+}
+
+function renderProgress() {
+  const idx = getStepIdx();
+  if (idx < 0) return "";
+  const labels = ["Capo", "Categoria", "Modello", "Personalizza", "Riepilogo"];
+  return `<div class="cfg-progress-inner">${labels
+    .map(
+      (l, i) =>
+        `<div class="cfg-progress-step${i === idx ? " active" : ""}${i < idx ? " done" : ""}"><span class="cfg-progress-dot">${i < idx ? "✓" : i + 1}</span></div>${i < labels.length - 1 ? `<div class="cfg-progress-line${i < idx ? " done" : ""}"></div>` : ""}`,
+    )
+    .join("")}</div><div class="cfg-progress-labels">${labels
+    .map(
+      (l, i) =>
+        `<span class="cfg-progress-label${i === idx ? " active" : ""}">${l}</span>`,
+    )
+    .join("")}</div>`;
+}
+
+function updateProgress() {
+  const el = document.getElementById("cfg-progress");
+  if (el) el.innerHTML = renderProgress();
+}
+
 function renderDone() {
   return `
     <div class="cfg-done">
@@ -444,7 +478,7 @@ function renderStepStart() {
   return `
     <div class="cfg-step">
       <div class="cfg-step-header">
-        <span class="cfg-step-num">Step 1</span>
+        <span class="cfg-step-num">1 / 5</span>
         <h2>Possiedi già il capo da personalizzare?</h2>
         <p>Dicci da dove partire — ti guideremo passo dopo passo.</p>
       </div>
@@ -506,7 +540,7 @@ function renderStepGarmentCategory() {
   return `
     <div class="cfg-step">
       <div class="cfg-step-header">
-        <span class="cfg-step-num">Step 2</span>
+        <span class="cfg-step-num">2 / 5</span>
         <h2>Scegli il tipo di capo</h2>
         <p>Seleziona la categoria del capo che vuoi personalizzare.</p>
       </div>
@@ -539,7 +573,7 @@ function renderStepGarmentType() {
   return `
     <div class="cfg-step">
       <div class="cfg-step-header">
-        <span class="cfg-step-num">Step 3</span>
+        <span class="cfg-step-num">3 / 5</span>
         <h2>Che tipo di capo è?</h2>
         <p>Scegli il modello della tua ${escHtml(catLabel)}.</p>
       </div>
@@ -572,7 +606,7 @@ function renderStepJeansModel() {
   return `
     <div class="cfg-step">
       <div class="cfg-step-header">
-        <span class="cfg-step-num">Step 3</span>
+        <span class="cfg-step-num">3 / 5</span>
         <h2>Scegli il modello</h2>
         <p>Seleziona il modello del tuo jeans.</p>
       </div>
@@ -679,7 +713,7 @@ function renderStepCustomize() {
   return `
     <div class="cfg-step">
       <div class="cfg-step-header">
-        <span class="cfg-step-num">Step 4</span>
+        <span class="cfg-step-num">4 / 5</span>
         <h2>Personalizza la tua ${escHtml(catLabel)}</h2>
         <p>Aggiungi le modifiche che desideri${typeLabel ? " al tuo capo " + escHtml(typeLabel) : ""}.</p>
       </div>
@@ -752,7 +786,7 @@ function renderStepReview() {
   return `
     <div class="cfg-step">
       <div class="cfg-step-header">
-        <span class="cfg-step-num">Step 5</span>
+        <span class="cfg-step-num">5 / 5</span>
         <h2>Riepilogo del progetto</h2>
         <p>Controlla che tutto sia corretto prima di inviare.</p>
       </div>

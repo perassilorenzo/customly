@@ -79,7 +79,7 @@ customly/
 │   └── sellers.js                      # Registry venditori (getAll/getById/search)
 │
 ├── pages/                              # Pagine dell'applicazione
-│   ├── configuratore.js                # Configuratore (1222 righe — file principale)
+│   ├── configuratore.js                # Configuratore (~1500 righe — file principale)
 │   ├── contatti.js                     # Pagina contatti
 │   ├── creator.js                      # Lista e profilo customizer
 │   ├── home.js                         # Home page
@@ -110,7 +110,7 @@ customly/
 │       └── immagini/.gitkeep
 │
 ├── styles/
-│   └── main.css                        # Tutti gli stili (5334 righe)
+│   └── main.css                        # Tutti gli stili (~5400 righe)
 │
 └── utils/                              # Utility generiche
     ├── formspree.js                    # Client API Formspree
@@ -563,7 +563,7 @@ afterRender(() => {
 
 **Easter egg**: Il testo "A Lorenzo Perassi Production" nel footer ha un hover tooltip con citazioni dal film "The Social Network". Primi 3 hover mostrano "Zuckerberg? Sounds Irish.", dal 4° in poi "Drop the The. Just Facebook.".
 
-**Sezioni**: Brand + descrizione, Naviga (link), Social (placeholder), Info (contatti, privacy, termini), Production (easter egg).
+**Sezioni**: Brand + descrizione, Naviga (link), Social (con icone SVG: Instagram, GitHub, LinkedIn, TikTok), Info (contatti, privacy, termini), Production (easter egg).
 
 ---
 
@@ -644,7 +644,7 @@ afterRender(() => {
 
 ## 6.9 `pages/configuratore.js`
 
-**Scopo**: Configuratore interattivo — il file più grande e complesso del progetto (~870 righe).
+**Scopo**: Configuratore interattivo — il file più grande e complesso del progetto (~1500 righe).
 
 **Esporta**:
 | Funzione | Scopo |
@@ -742,8 +742,11 @@ afterRender(() => {
 | Funzione | Scopo |
 |---|---|
 | `initState()` | Crea stato fresco |
-| `render()` | Monta layout se non presente, poi renderizza step + sidebar |
+| `render()` | Monta layout se non presente, poi renderizza step + sidebar + progress bar |
 | `renderCurrentStep()` | Dispatcher: chiama `renderStep*()` giusto |
+| `getStepIdx()` | Restituisce indice step corrente (0-4) per la progress bar |
+| `renderProgress()` | Genera HTML progress bar orizzontale a 5 step (Capo, Categoria, Modello, Personalizza, Riepilogo) |
+| `updateProgress()` | Aggiorna la progress bar nel DOM |
 | `renderStepStart()` | Scelta "Possiedi già il capo?" |
 | `renderStepNoGarment()` | Scegli dalla collezione del customizer |
 | `renderStepGarmentCategory()` | Scegli categoria: Maglia, Polo, Camicia, Jeans |
@@ -866,7 +869,7 @@ Usato da `products.js` per generare ombre e dettagli del capo con tonalità liev
 
 ## 6.16 `styles/main.css`
 
-**Scopo**: Tutti gli stili dell'applicazione in un unico file (5334 righe).
+**Scopo**: Tutti gli stili dell'applicazione in un unico file (~5400 righe).
 
 **Sezioni principali**:
 | Sezione | Righe | Cosa contiene |
@@ -880,7 +883,7 @@ Usato da `products.js` per generare ombre e dettagli del capo con tonalità liev
 | Bottoni | 325-353 | `.btn`, `.btn-primary`, `.btn-secondary` |
 | Timeline | 466-616 | Timeline animata 4 step |
 | Configuratore v1 | 760-931 | Prima versione configuratore |
-| Configuratore v2 | 1252-1953 | Versione attuale del configuratore |
+| Configuratore v2 | 1252-1953 | Versione attuale del configuratore (include progress bar a 5 step) |
 | Creator profile | 1955-2391 | Profilo e lista customizer |
 
 **Design system**:

@@ -313,31 +313,31 @@ nav .container {
 footer {
   border-top: 2px solid var(--text);
   margin-top: 160px;
-  padding: 60px 0 32px;
+  padding: 48px 0 24px;
   background: var(--bg-card);
 }
-footer .grid {
+.footer-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 40px;
+  gap: 28px;
 }
-@media (max-width: 768px) {
-  footer .grid {
+@media (min-width: 481px) {
+  .footer-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 30px;
+    gap: 32px;
   }
 }
-@media (max-width: 480px) {
-  footer .grid {
-    grid-template-columns: 1fr;
+@media (min-width: 769px) {
+  .footer-grid {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
   }
 }
 footer h4 {
   font-family: var(--font-heading);
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   color: var(--text);
   margin-bottom: 16px;
 }
@@ -352,16 +352,22 @@ footer a:hover {
 }
 .footer-brand .logo {
   font-family: var(--font-heading);
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--text);
-  margin-bottom: 10px;
   display: block;
+  margin-bottom: 8px;
 }
 .footer-brand .logo span {
   color: var(--accent);
+}
+.footer-brand .tagline {
+  font-style: italic;
+  color: var(--accent);
+  margin-bottom: 12px;
+  font-size: 14px;
 }
 .footer-brand p {
   font-size: 14px;
@@ -369,18 +375,61 @@ footer a:hover {
   line-height: 1.7;
   max-width: 300px;
 }
+.footer-nav {
+  display: flex;
+  flex-direction: column;
+}
+.footer-social h4 {
+  margin-bottom: 12px;
+}
+.social-links {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+.social-link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+.social-link svg {
+  width: 18px;
+  height: 18px;
+}
 .footer-bottom {
   border-top: 1px solid var(--border-light);
   margin-top: 40px;
   padding-top: 20px;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
   font-size: 13px;
   color: var(--text-tertiary);
+  text-align: center;
+}
+@media (min-width: 481px) {
+  .footer-bottom {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
 }
 .footer-production {
   position: relative;
   cursor: default;
+  font-style: italic;
 }
 .footer-production[data-tooltip]::after {
   content: attr(data-tooltip);
@@ -409,10 +458,9 @@ footer a:hover {
   }
 }
 @media (max-width: 480px) {
-  .footer-bottom {
-    flex-direction: column;
-    gap: 8px;
-    text-align: center;
+  footer {
+    margin-top: 80px;
+    padding: 40px 0 20px;
   }
 }
 
@@ -1659,6 +1707,90 @@ footer a:hover {
   font-size: 14px;
   color: var(--text-tertiary);
   text-align: center;
+}
+
+/* progress */
+.cfg-progress {
+  margin-bottom: 32px;
+  padding-top: 8px;
+}
+.cfg-progress-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cfg-progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 48px;
+}
+.cfg-progress-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  background: var(--bg);
+  transition: all 0.2s;
+  z-index: 1;
+}
+.cfg-progress-step.done .cfg-progress-dot {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+  font-size: 11px;
+}
+.cfg-progress-step.active .cfg-progress-dot {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+.cfg-progress-line {
+  width: 48px;
+  height: 2px;
+  background: var(--border);
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.cfg-progress-line.done {
+  background: var(--accent);
+}
+.cfg-progress-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  padding: 0 4px;
+}
+.cfg-progress-label {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  text-align: center;
+  flex: 1;
+  transition: color 0.2s;
+}
+.cfg-progress-label.active {
+  color: var(--accent);
+}
+@media (max-width: 600px) {
+  .cfg-progress {
+    margin-bottom: 24px;
+  }
+  .cfg-progress-line {
+    width: 28px;
+  }
+  .cfg-progress-labels {
+    display: none;
+  }
 }
 
 /* steps */
@@ -5230,25 +5362,6 @@ html.dark-mode .cfg-search-bar input::placeholder {
     flex-direction: row;
     flex-wrap: wrap;
     gap: 6px;
-  }
-
-  /* Footer: single column, proper mobile */
-  footer {
-    margin-top: 80px;
-    padding: 40px 0 24px;
-  }
-  footer .grid {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-  footer p,
-  footer a {
-    line-height: 1.8;
-  }
-  .footer-bottom {
-    flex-direction: column;
-    gap: 8px;
-    text-align: center;
   }
 
   /* Search row: stack on mobile */
