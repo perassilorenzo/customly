@@ -43,16 +43,24 @@ export function renderFooter() {
         <p class="tagline">Make it yours.</p>
         <p>La piattaforma per la custom fashion. Trova un professionista, configura un capo, rendilo tuo.</p>
       </div>
+      <div class="footer-nav">
+        <h4>Naviga</h4>
+        <a href="/">Home</a>
+        <a href="/configuratore">Configuratore</a>
+        <a href="/customizers">Customizers</a>
+        <a href="/contatti">Contatti</a>
+      </div>
+      <div class="footer-nav footer-info">
+        <h4>Info</h4>
+        <a href="/privacy">Privacy</a>
+        <a href="/termini">Termini</a>
+        <a href="mailto:lorenzo@example.com">Email</a>
+      </div>
       <div class="footer-social">
         <h4>Seguici</h4>
         <div class="social-links">
           ${socialsHtml}
         </div>
-      </div>
-      <div class="footer-nav footer-info">
-        <a href="/privacy">Privacy</a>
-        <a href="/termini">Termini</a>
-        <a href="mailto:lorenzo@example.com">Email</a>
       </div>
     </div>
     <div class="footer-bottom">
