@@ -849,11 +849,13 @@ function renderList() {
           <div class="creator-list-search">
             <input class="creator-list-search-input" data-search-input type="text" placeholder="Cerca un customizer per nome, citt&agrave;, stile o competenza..." autocomplete="off">
           </div>
+          <!-- Filters — temporarily hidden, keep for future
           <button class="creator-filter-toggle" data-toggle-filters>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
             Filters${n ? ` (${n})` : ""}
           </button>
           ${n ? `<button class="creator-clear-all" data-clear-filters>Clear all</button>` : ""}
+          -->
         </div>
         ${renderActiveFilters(_listState.filters)}
         <div class="creator-grid-list" data-list>
