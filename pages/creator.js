@@ -832,7 +832,7 @@ function renderWaitlistForm() {
 }
 
 function renderList() {
-  const all = getAllCustomizers();
+  const all = getAllCustomizers().filter((c) => !c.hidden);
   const opts = collectFilterOptions(all);
   const n = countActive(_listState.filters);
   _fromConfigure =
@@ -1052,7 +1052,7 @@ let _fromConfigure = false;
 let bound = false;
 
 function applyListFilter() {
-  const all = getAllCustomizers();
+  const all = getAllCustomizers().filter((c) => !c.hidden);
   const list = document.querySelector("[data-list]");
   const empty = document.querySelector("[data-empty]");
   if (!list) return;
@@ -1771,7 +1771,9 @@ export function initCreator() {
   });
 
   /* Precompute filter options */
-  _filterOpts = collectFilterOptions(getAllCustomizers());
+  _filterOpts = collectFilterOptions(
+    getAllCustomizers().filter((c) => !c.hidden),
+  );
 
   /* List page: toggle filters button */
   document

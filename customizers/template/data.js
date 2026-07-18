@@ -1,5 +1,6 @@
 export const customizer = {
   id: "template",
+  hidden: true,
   name: "Template Profile",
   tagline: "Il tuo profilo customizer — personalizza ogni dettaglio.",
   bio: "Questo è un profilo di esempio che mostra come sarà il tuo spazio su Customly. Ogni customizer può inserire la propria biografia, i propri lavori, i servizi offerti e molto altro. Personalizza tutto per far conoscere il tuo stile.\n\nIl profilo è pensato per raccontare chi sei, cosa fai e come lavori. Puoi parlare della tua storia, del tuo approccio creativo e della tua filosofia. Mostra i tuoi lavori migliori, i servizi che offri e lascia che i clienti ti scoprano.",
