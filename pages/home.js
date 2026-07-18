@@ -57,34 +57,34 @@ export function renderHome() {
       </div>
       <div class="steps">
         <div class="steps-line"></div>
-        <div class="step">
+        <a class="step" href="/customizers">
           <div class="step-dot">01</div>
           <div class="step-content">
             <h3>Trova il customizer</h3>
             <p>Esplora profili, stili e specializzazioni. Scegli il professionista giusto per il tuo progetto.</p>
           </div>
-        </div>
-        <div class="step">
+        </a>
+        <a class="step" href="/configuratore">
           <div class="step-dot">02</div>
           <div class="step-content">
             <h3>Configura il capo</h3>
             <p>Seleziona modello, materiali e modifiche. Costruisci il capo esatto che hai in mente.</p>
           </div>
-        </div>
-        <div class="step">
+        </a>
+        <a class="step" href="/configuratore">
           <div class="step-dot">03</div>
           <div class="step-content">
             <h3>Completa il progetto</h3>
             <p>Aggiungi note, riferimenti e varianti. Hai tutto sotto controllo prima di inviare.</p>
           </div>
-        </div>
-        <div class="step">
+        </a>
+        <a class="step" href="/configuratore">
           <div class="step-dot">04</div>
           <div class="step-content">
             <h3>Invia e collabora</h3>
             <p>Invia il progetto al customizer e definisci insieme la realizzazione. Zero fraintendimenti.</p>
           </div>
-        </div>
+        </a>
       </div>
     </div>
   </section>
