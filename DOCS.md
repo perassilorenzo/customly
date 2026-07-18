@@ -603,7 +603,7 @@ afterRender(() => {
 **Funzioni interne**:
 | Funzione | Scopo |
 |---|---|
-| `renderProfile(seller)` | Genera HTML del profilo customizer (avatar, nome, bio, stili, esempi, contatti, CTA) |
+| `renderProfile(seller)` | Genera HTML del profilo customizer (avatar, nome, bio, servizi, stili, portfolio, recensioni, social, CTA) |
 | `renderList()` | Genera HTML della griglia di tutti i customizer + modulo waitlist |
 | `renderWaitlistForm()` | Genera HTML del modulo candidatura customizer (hero, come funziona, requisiti, FAQ, form) |
 | `renderListItem(c)` | Genera singola card customizer nella lista discover |
@@ -625,13 +625,17 @@ afterRender(() => {
 │            Nome Customizer              │
 │            Tagline                      │
 ├──────────────────────┬──────────────────┤
-│  About               │  Instagram link  │
-│  Bio paragrafo       │                  │
-│                      │  [Start customiz │
-│  Specialized in      │   ing →]        │
+│  About               │  Portfolio link  │
+│  Bio paragrafo       │  (URL dinamico)  │
+│                      │                  │
+│  Services            │  [Start customiz │
+│  • nome (prezzo)     │   ing →]        │
+│  • nome (prezzo)     │                  │
+│                      │                  │
+│  Skills & Specialties│                  │
 │  [tag] [tag] [tag]   │                  │
-│                      │  Configure your  │
-│  Example works       │  garment with... │
+│                      │                  │
+│  Portfolio           │                  │
 │  • lavoro 1          │                  │
 │  • lavoro 2          └──────────────────┤
 │  • lavoro 3          │← Go to configur  │
@@ -663,7 +667,7 @@ afterRender(() => {
         │           │
         ▼           ▼
   ┌──────────────┐  ┌─────────────┐
-  │  garment-    │     │ no-garment  │  "Crea da zero" → scegli dalla collezione
+  │  garment-    │     │ no-garment  │  Scegli dalla collezione del customizer
   │  category    │     └──────┬─────┘
   └──────┬───────┘            │
          │                    ▼
@@ -701,10 +705,10 @@ afterRender(() => {
 6. `review` → Riepilogo + form
 7. `done` → Conferma
 
-**Flusso No (crea da zero)**:
+**Flusso No (scegli dalla collezione)**:
 
 1. `start` → "Possiedi già il capo?" → No
-2. `no-garment` → Scegli dalla collezione del customizer
+2. `no-garment` → Scegli un capo dalla collezione del customizer (imposta `garmentType` + `basePrice`)
 3. `customize` → Modifiche
 4. `review` → Riepilogo + form
 5. `done` → Conferma
@@ -727,7 +731,7 @@ afterRender(() => {
   creator: null,              // ID del creator selezionato
   hasGarment: null,           // true/false/non ancora scelto
   garmentCategory: null,      // "maglia" | "polo" | "camicia" | "jeans"
-  garmentType: null,          // "canotta" | "manica-corta" | "manica-lunga"
+  garmentType: null,          // "canotta" | "manica-corta" | "manica-lunga" | ID da availableForCustomization
   jeansModel: null,           // "skinny" | "regular" | "baggy" | "flared"
   brand: "",                  // marca opzionale
   customizations: [],         // modifiche attive con fabric, fabricCustom, _open
@@ -1294,11 +1298,11 @@ Le sezioni sono in ordine di apparizione nel layout:
 
 Breakpoint usati:
 
-- **768px**: Nav → hamburger animato (span → X), footer 1 colonna, timeline single-column, about-inline inverte ordine (roadmap prima), social tags orizzontali, card customizer centrata e singola colonna, waitlist how-cards accordion, contact channels no-link, search row si impila (search + filters su righe separate)
+- **480px**: Container padding ridotto (16px), configuratore griglie a 1 colonna (choice-grid, type-grid), config-preview padding ridotto, cfg-add-dropdown full-width, footer 1 colonna
+- **768px**: Nav → hamburger animato (span → X), footer 1 colonna, timeline single-column, about-inline inverte ordine (roadmap prima), social tags orizzontali, card customizer centrata e singola colonna, waitlist how-cards accordion, search row si impila
 - **900px**: Configuratore → layout singola colonna
 - **960px**: Configuratore v2 → singola colonna
 - **1024px**: Timeline card più strette
-- **480px**: Footer 1 colonna
 
 ### Pattern di sfondo
 
