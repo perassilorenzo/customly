@@ -147,6 +147,7 @@
       import { renderCreator, initCreator } from "./pages/creator.js";
       import { renderTerms } from "./pages/terms.js";
       import { renderPrivacy } from "./pages/privacy.js";
+      import { renderAdmin, initAdmin } from "./pages/admin.js";
 
       function wrap(html, initFn) {
         return (ctx) => {
@@ -170,6 +171,7 @@
       route("/customizers/:id", wrap(renderCreator, initCreator));
       route("/termini", wrap(renderTerms));
       route("/privacy", wrap(renderPrivacy));
+      route("/admin", wrap(renderAdmin, initAdmin));
 
       init(document.getElementById("app"));
       initNav();

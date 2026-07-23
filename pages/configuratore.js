@@ -408,6 +408,15 @@ function render() {
     listen();
   }
 
+  const sidebar = document.getElementById("cfg-sidebar");
+  const progress = document.getElementById("cfg-progress");
+  if (s.submittedOk) {
+    if (sidebar) sidebar.style.display = "none";
+    if (progress) progress.style.display = "none";
+  } else {
+    if (sidebar) sidebar.style.display = "";
+    if (progress) progress.style.display = "";
+  }
   updateProgress();
   renderStep();
   renderModal();
@@ -1091,16 +1100,6 @@ function renderModal() {
     return;
   }
   root.insertAdjacentHTML("beforeend", buildModalHTML(s.modal));
-  const overlay = root.querySelector(".cfg-modal-overlay");
-  if (overlay) {
-    overlay.addEventListener("click", (e) => {
-      if (e.target === overlay) {
-        s.modal = null;
-        const el = root.querySelector(".cfg-modal-overlay");
-        if (el) el.remove();
-      }
-    });
-  }
 }
 
 function listen() {
@@ -1108,6 +1107,12 @@ function listen() {
   if (!root) return;
 
   root.addEventListener("click", (e) => {
+    if (e.target.classList.contains("cfg-modal-overlay")) {
+      s.modal = null;
+      renderModal();
+      return;
+    }
+
     const t = e.target.closest("button, a");
     if (!t) return;
 
