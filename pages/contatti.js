@@ -56,7 +56,7 @@ export function renderContatti() {
           <div class="contact-channel">
             <div>
               <div class="label">Email diretta</div>
-              <div class="desc">lorenzo@example.com</div>
+              <div class="desc">perassi.lorenzo1804@gmail.com</div>
             </div>
           </div>
         </div>

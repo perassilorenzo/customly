@@ -588,8 +588,6 @@ function renderProfile(c) {
           <div class="creator-layout">
             <div class="creator-main-col">
               ${renderAbout(c)}
-              ${renderServices(c)}
-              ${renderSkills(c)}
               ${renderAvailableForCustomization(c)}
               ${renderProducts(c)}
               ${renderPortfolio(c)}

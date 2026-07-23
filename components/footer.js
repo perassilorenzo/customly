@@ -54,7 +54,7 @@ export function renderFooter() {
         <h4>Info</h4>
         <a href="/privacy">Privacy</a>
         <a href="/termini">Termini</a>
-        <a href="mailto:lorenzo@example.com">Email</a>
+        <a href="mailto:perassi.lorenzo1804@gmail.com">Email</a>
       </div>
       <div class="footer-social">
         <h4>Seguici</h4>

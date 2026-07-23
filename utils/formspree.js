@@ -1,4 +1,4 @@
-const ID = ""; // <-- il tuo ID Formspree
+const ID = "xgojbgje";
 
 export async function send(data) {
   if (!ID) {

@@ -790,49 +790,48 @@ function renderStepReview() {
         <h2>Riepilogo del progetto</h2>
         <p>Controlla che tutto sia corretto prima di inviare.</p>
       </div>
-      <div class="cfg-project-card">
-        <div class="cfg-project-card-header">
-          <span class="cfg-project-card-label">Progetto personalizzato</span>
+      <div class="cfg-review-visual">
+        <div class="cfg-review-garment">
+          <div class="cfg-review-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46L16 2 12 5.5 8 2l-4.38 1.46a2 2 0 00-1.34 1.86v14.36A2 2 0 004.62 21.54L8 20l4 3.5 4-3.5 3.38 1.54a2 2 0 002.34-1.86V5.32a2 2 0 00-1.34-1.86z"/><line x1="12" y1="22" x2="12" y2="5.5"/></svg>
+          </div>
+          <div class="cfg-review-garment-info">
+            <span class="cfg-review-garment-type">${catLabel}${typeLabel ? " — " + typeLabel : ""}</span>
+            ${s.brand ? `<span class="cfg-review-garment-brand">${escHtml(s.brand)}</span>` : ""}
+          </div>
+          ${ci ? `<div class="cfg-review-customizer"><span class="cfg-review-customizer-dot"></span>${escHtml(ci.name)}</div>` : ""}
         </div>
-        <div class="cfg-project-card-body">
-          ${
-            ci
-              ? `
-          <div class="cfg-project-row">
-            <span class="cfg-project-label">Customizer</span>
-            <span class="cfg-project-value">${ci.name}</span>
-          </div>`
-              : ""
-          }
-          <div class="cfg-project-row">
-            <span class="cfg-project-label">Capo</span>
-            <span class="cfg-project-value">${catLabel}${typeLabel ? " — " + typeLabel : ""}${s.brand ? " (" + escHtml(s.brand) + ")" : ""}</span>
+        ${
+          s.customizations.length > 0
+            ? `
+        <div class="cfg-review-mods">
+          <div class="cfg-review-mods-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            Modifiche (${s.customizations.length})
           </div>
-          ${
-            s.customizations.length > 0
-              ? `
-          <div class="cfg-project-section">
-            <span class="cfg-project-label">Modifiche</span>
-            <ul class="cfg-project-list">
-              ${s.customizations
-                .map((c) => {
-                  const def = findCustDef(c.id);
-                  if (!def) return "";
-                  const fabricLine =
-                    def.needsFabric && c.fabric
-                      ? ` — Tessuto: ${c.fabric === "altro" ? c.fabricCustom || "Altro" : FABRIC_OPTIONS.find((fo) => fo.id === c.fabric)?.label || c.fabric}`
-                      : "";
-                  return `<li>${def.label}${fabricLine} <span class="cfg-project-price">+€${def.price}</span></li>`;
-                })
-                .join("")}
-            </ul>
-          </div>`
-              : ""
-          }
-          <div class="cfg-project-total">
-            <span>Totale stimato</span>
-            <span class="cfg-project-total-amount">€${total.toFixed(2)}</span>
+          <div class="cfg-review-mods-list">
+            ${s.customizations
+              .map((c) => {
+                const def = findCustDef(c.id);
+                if (!def) return "";
+                const fabricLine =
+                  def.needsFabric && c.fabric
+                    ? `<span class="cfg-review-mod-fabric">${c.fabric === "altro" ? c.fabricCustom || "Altro" : FABRIC_OPTIONS.find((fo) => fo.id === c.fabric)?.label || c.fabric}</span>`
+                    : "";
+                return `
+                <div class="cfg-review-mod-item">
+                  <span class="cfg-review-mod-name">${def.label}${fabricLine}</span>
+                  <span class="cfg-review-mod-price">+€${def.price}</span>
+                </div>`;
+              })
+              .join("")}
           </div>
+        </div>`
+            : ""
+        }
+        <div class="cfg-review-total">
+          <span class="cfg-review-total-label">Totale stimato</span>
+          <span class="cfg-review-total-amount">€${total.toFixed(2)}</span>
         </div>
       </div>
       <div class="cfg-section" style="margin-top:32px">
@@ -1017,7 +1016,7 @@ const PRIVACY_SECTIONS = `
   </section>
   <section style="margin-bottom:24px">
     <h2 style="font-family:var(--font-heading);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px">2. Titolare del trattamento</h2>
-    <p style="font-size:13px;color:var(--text-secondary);line-height:1.7">Il titolare del trattamento dei dati raccolti attraverso la piattaforma Customly è Lorenzo Perassi.<br><br>Per qualsiasi comunicazione relativa al trattamento dei dati personali, è possibile contattare il titolare all'indirizzo email: lorenzo@example.com.</p>
+    <p style="font-size:13px;color:var(--text-secondary);line-height:1.7">Il titolare del trattamento dei dati raccolti attraverso la piattaforma Customly è Lorenzo Perassi.<br><br>Per qualsiasi comunicazione relativa al trattamento dei dati personali, è possibile contattare il titolare all'indirizzo email: perassi.lorenzo1804@gmail.com.</p>
   </section>
   <section style="margin-bottom:24px">
     <h2 style="font-family:var(--font-heading);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px">3. Dati raccolti</h2>
@@ -1049,7 +1048,7 @@ const PRIVACY_SECTIONS = `
   </section>
   <section style="margin-bottom:24px">
     <h2 style="font-family:var(--font-heading);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px">10. Diritti dell'utente</h2>
-    <p style="font-size:13px;color:var(--text-secondary);line-height:1.7">L'utente ha il diritto di accedere ai propri dati, richiederne la rettifica o cancellazione, limitarne il trattamento, opporsi e revocare il consenso in qualsiasi momento.<br><br>Per esercitare questi diritti, l'utente può contattare il titolare del trattamento all'indirizzo email: lorenzo@example.com.<br><br>L'utente ha inoltre il diritto di proporre reclamo al Garante per la Protezione dei Dati Personali.</p>
+    <p style="font-size:13px;color:var(--text-secondary);line-height:1.7">L'utente ha il diritto di accedere ai propri dati, richiederne la rettifica o cancellazione, limitarne il trattamento, opporsi e revocare il consenso in qualsiasi momento.<br><br>Per esercitare questi diritti, l'utente può contattare il titolare del trattamento all'indirizzo email: perassi.lorenzo1804@gmail.com.<br><br>L'utente ha inoltre il diritto di proporre reclamo al Garante per la Protezione dei Dati Personali.</p>
   </section>
   <section style="margin-bottom:24px">
     <h2 style="font-family:var(--font-heading);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px">11. Modifiche alla Privacy Policy</h2>

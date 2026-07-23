@@ -12,7 +12,7 @@ export function renderPrivacy() {
 
         <section style="margin-bottom:32px">
           <h2 style="font-family:var(--font-heading);font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px">2. Titolare del trattamento</h2>
-          <p style="font-size:14px;color:var(--text-secondary);line-height:1.7">Il titolare del trattamento dei dati raccolti attraverso la piattaforma Customly è Lorenzo Perassi.<br><br>Per qualsiasi comunicazione relativa al trattamento dei dati personali, è possibile contattare il titolare all'indirizzo email: lorenzo@example.com.</p>
+          <p style="font-size:14px;color:var(--text-secondary);line-height:1.7">Il titolare del trattamento dei dati raccolti attraverso la piattaforma Customly è Lorenzo Perassi.<br><br>Per qualsiasi comunicazione relativa al trattamento dei dati personali, è possibile contattare il titolare all'indirizzo email: perassi.lorenzo1804@gmail.com.</p>
         </section>
 
         <section style="margin-bottom:32px">
@@ -81,7 +81,7 @@ export function renderPrivacy() {
             <li>Opporsi al trattamento per motivi legittimi</li>
             <li>Revocare il consenso in qualsiasi momento, senza pregiudicare la liceità del trattamento basata sul consenso prestato prima della revoca</li>
           </ul>
-          <p style="font-size:14px;color:var(--text-secondary);line-height:1.7">Per esercitare questi diritti, l'utente può contattare il titolare del trattamento all'indirizzo email: lorenzo@example.com.<br><br>L'utente ha inoltre il diritto di proporre reclamo all'autorità di controllo competente (Garante per la Protezione dei Dati Personali) se ritiene che il trattamento violi il Regolamento UE 2016/679 (GDPR).</p>
+          <p style="font-size:14px;color:var(--text-secondary);line-height:1.7">Per esercitare questi diritti, l'utente può contattare il titolare del trattamento all'indirizzo email: perassi.lorenzo1804@gmail.com.<br><br>L'utente ha inoltre il diritto di proporre reclamo all'autorità di controllo competente (Garante per la Protezione dei Dati Personali) se ritiene che il trattamento violi il Regolamento UE 2016/679 (GDPR).</p>
         </section>
 
         <section style="margin-bottom:32px">

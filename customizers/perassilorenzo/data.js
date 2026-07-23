@@ -71,6 +71,25 @@ export const customizer = {
       price: 95,
       status: "available",
     },
+    {
+      id: "lp-prod-2",
+      name: "Skinny Jeans Reconstruction",
+      image:
+        "customizers/perassilorenzo/images/fashion-skinny-reconstruction.jpg",
+      gallery: [
+        "customizers/perassilorenzo/images/fashion-skinny-reconstruction.jpg",
+        "customizers/perassilorenzo/images/fashion-skinny-reconstruction.mov",
+      ],
+      description:
+        "Jeans skinny trasformati con inserti in denim chiaro sul fondo e patch in tessuto blu e rosso sulle ginocchia per un effetto ricostruito e contrastato.",
+      popupDescription:
+        "Jeans skinny completamente rielaborati. Sul fondo ho inserito pannelli in denim chiaro per allargare la silhouette, e sulle ginocchia ho applicato patch in tessuto blu e rosso per un effetto ricostruito e contrastato. Ogni dettaglio \u00e8 fatto a mano.",
+      details:
+        "Tessuto: denim skinny + inserti denim chiaro + patch blu/rosso. Taglia: M. Lavorazioni: inserti fondo, patch ginocchia, ricostruzione completa.",
+      sizes: ["M"],
+      price: 85,
+      status: "available",
+    },
   ],
   portfolio: [
     {
@@ -115,16 +134,6 @@ export const customizer = {
         "customizers/perassilorenzo/images/fashion-flared-reconstruction.mov",
       ],
       techniques: ["Custom", "Jeans", "Flared Hem"],
-    },
-    {
-      title: "Skinny Jeans Reconstruction",
-      description:
-        "Jeans skinny trasformati con inserti in denim chiaro sul fondo e patch in tessuto blu e rosso sulle ginocchia per un effetto ricostruito e contrastato.",
-      images: [
-        "customizers/perassilorenzo/images/fashion-skinny-reconstruction.jpg",
-        "customizers/perassilorenzo/images/fashion-skinny-reconstruction.mov",
-      ],
-      techniques: ["Rework", "Jeans", "Multi Fabric"],
     },
     {
       title: "Skinny to Flared Transformation",
