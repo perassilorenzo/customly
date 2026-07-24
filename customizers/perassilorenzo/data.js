@@ -68,7 +68,7 @@ export const customizer = {
       details:
         "Tessuto: cotone marrone con usura naturale + tessuto camo. Taglia: M. Lavorazioni: inserti camo, allargamento fondo, tasche laterali aperte, cuciture a vista.",
       sizes: ["M"],
-      price: 95,
+      price: 80,
       status: "available",
     },
     {
