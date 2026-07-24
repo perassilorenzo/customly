@@ -173,57 +173,28 @@ function renderProductModal(p, c) {
   const allMedia = hasGallery ? [p.image, ...p.gallery] : [p.image];
   return `
     <div class="product-modal-overlay" data-product-modal>
-      <div class="product-modal">
+      <div class="product-modal product-modal--fullscreen">
         <button class="product-modal-close" data-close-product-modal>&times;</button>
-        <div class="product-modal-grid">
-          <div class="product-modal-images">
-            <div class="product-modal-main-image" data-media-index="0" data-fullscreen-trigger>
-              ${mainMedia}
-            </div>
-            ${
-              hasGallery
-                ? `
-              <button class="product-modal-arrow product-modal-arrow--left" data-gallery-prev>&lsaquo;</button>
-              <button class="product-modal-arrow product-modal-arrow--right" data-gallery-next>&rsaquo;</button>
-              <div class="product-modal-gallery" data-gallery-items='${JSON.stringify(allMedia)}'>
-                ${allMedia
-                  .map((m, i) => {
-                    return `<div class="product-modal-thumb${i === 0 ? " active" : ""}" data-gallery-index="${i}">
-                    ${isMov(m) ? `<video src="${m}" muted loop playsinline></video>` : `<img src="${m}" alt="">`}
-                  </div>`;
-                  })
-                  .join("")}
-              </div>`
-                : ""
-            }
+        <div class="product-modal-images">
+          <div class="product-modal-main-image" data-media-index="0" data-fullscreen-trigger>
+            ${mainMedia}
           </div>
-          <div class="product-modal-info">
-            <div class="creator-product-header">
-              <h3>${esc(p.name)}</h3>
-              <span class="creator-product-status creator-product-status--${st}">${statusLabel(st)}</span>
-            </div>
-            <div class="product-modal-price">\u20ac${p.price}</div>
-            <p class="product-modal-desc">${esc(p.popupDescription || p.description)}</p>
-            ${p.details ? `<div class="product-modal-details">${esc(p.details)}</div>` : ""}
-            <div class="product-modal-sizes">
-              <strong>Misura:</strong>
-              <div class="product-modal-size-options">
-                ${(p.sizes || []).map((s) => `<span class="product-modal-size selected">${s}</span>`).join("")}
-              </div>
-            </div>
-            <div class="product-modal-actions">
-              ${
-                st === "available"
-                  ? `
-                <button class="cfg-btn cfg-btn-primary" data-open-inquiry="${c.id}:${p.id}">Richiedi informazioni</button>
-                <button class="cfg-btn cfg-btn-secondary" data-open-purchase="${c.id}:${p.id}">Acquista</button>
-              `
-                  : `
-                <span class="product-sold-out-badge">Non disponibile</span>
-              `
-              }
-            </div>
-          </div>
+          ${
+            hasGallery
+              ? `
+            <button class="product-modal-arrow product-modal-arrow--left" data-gallery-prev>&lsaquo;</button>
+            <button class="product-modal-arrow product-modal-arrow--right" data-gallery-next>&rsaquo;</button>
+            <div class="product-modal-gallery" data-gallery-items='${JSON.stringify(allMedia)}'>
+              ${allMedia
+                .map((m, i) => {
+                  return `<div class="product-modal-thumb${i === 0 ? " active" : ""}" data-gallery-index="${i}">
+                  ${isMov(m) ? `<video src="${m}" muted loop playsinline></video>` : `<img src="${m}" alt="">`}
+                </div>`;
+                })
+                .join("")}
+            </div>`
+              : ""
+          }
         </div>
       </div>
     </div>`;
@@ -241,41 +212,28 @@ function renderPortfolioModal(p, c) {
   const hasGallery = allMedia.length > 1;
   return `
     <div class="product-modal-overlay" data-portfolio-modal>
-      <div class="product-modal">
+      <div class="product-modal product-modal--fullscreen">
         <button class="product-modal-close" data-close-portfolio-modal>&times;</button>
-        <div class="product-modal-grid">
-          <div class="product-modal-images">
-            <div class="product-modal-main-image" data-media-index="0">
-              ${mainMedia}
-            </div>
-            ${
-              hasGallery
-                ? `
-              <button class="product-modal-arrow product-modal-arrow--left" data-portfolio-gallery-prev>&lsaquo;</button>
-              <button class="product-modal-arrow product-modal-arrow--right" data-portfolio-gallery-next>&rsaquo;</button>
-              <div class="product-modal-gallery" data-gallery-items='${JSON.stringify(allMedia)}'>
-                ${allMedia
-                  .map((m, i) => {
-                    return `<div class="product-modal-thumb${i === 0 ? " active" : ""}" data-gallery-index="${i}">
-                    ${isMov(m) ? `<video src="${m}" muted loop playsinline></video>` : `<img src="${m}" alt="">`}
-                  </div>`;
-                  })
-                  .join("")}
-              </div>`
-                : ""
-            }
+        <div class="product-modal-images">
+          <div class="product-modal-main-image" data-media-index="0">
+            ${mainMedia}
           </div>
-          <div class="product-modal-info">
-            <div class="creator-product-header">
-              <h3>${esc(p.name)}</h3>
-              <span class="creator-product-status creator-product-status--sold">Venduto</span>
-            </div>
-            <div class="product-modal-price">\u20ac${p.price}</div>
-            <p class="product-modal-desc">${esc(p.description)}</p>
-            <div class="product-modal-actions">
-              <span class="product-sold-out-badge">Non disponibile</span>
-            </div>
-          </div>
+          ${
+            hasGallery
+              ? `
+            <button class="product-modal-arrow product-modal-arrow--left" data-portfolio-gallery-prev>&lsaquo;</button>
+            <button class="product-modal-arrow product-modal-arrow--right" data-portfolio-gallery-next>&rsaquo;</button>
+            <div class="product-modal-gallery" data-gallery-items='${JSON.stringify(allMedia)}'>
+              ${allMedia
+                .map((m, i) => {
+                  return `<div class="product-modal-thumb${i === 0 ? " active" : ""}" data-gallery-index="${i}">
+                  ${isMov(m) ? `<video src="${m}" muted loop playsinline></video>` : `<img src="${m}" alt="">`}
+                </div>`;
+                })
+                .join("")}
+            </div>`
+              : ""
+          }
         </div>
       </div>
     </div>`;

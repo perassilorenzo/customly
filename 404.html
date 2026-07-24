@@ -9,10 +9,10 @@
       var parts = p.split("/");
       var base = "/" + (parts[1] || "") + "/";
       var qs = new URLSearchParams(l.search);
-      if (qs.get("p") === p) {
+      if (qs.has("p")) {
         l.replace(base);
       } else {
-        l.replace(base + "index.html?p=" + encodeURIComponent(p));
+        l.replace(base + "?p=" + encodeURIComponent(p));
       }
     </script>
   </head>
